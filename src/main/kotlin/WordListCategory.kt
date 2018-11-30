@@ -2,9 +2,12 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 
 /**
- * TODO: add documentation
+ * Contains two categories, the distinction lies in the [font] and [color].
  *
- * @author  Stan van der Bend (https://www.rune-server.ee/members/StanDev/)
+ * @param font the [Font] of the words in a [WordList] set
+ * @param color the [Color] of the words in a [WordList] set
+ *
+ * @author  Stan van der Bend
  * @since   2018-11-29
  * @version 1.0
  */
