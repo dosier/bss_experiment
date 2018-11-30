@@ -2,23 +2,25 @@ import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Label
 import javafx.scene.layout.VBox
-import java.util.*
 
 /**
- * TODO: add documentation
+ * A [TestResult] handles the user input, it counts the mistakes and offers functionality to display the result.
  *
- * @author  Stan van der Bend (https://www.rune-server.ee/members/StanDev/)
+ * @see createVBox called by [ExperimentScreen] after submission of an answer by the user
+ *
+ * @author  Stan van der Bend
  * @since   2018-11-30
  * @version 1.0
  */
 class TestResult(answers : WordList, wordList: WordList) {
 
-    private val total = wordList.size
+    private val numberOfWordsTested = wordList.size
+    private val resultLabel : Label
     val mistakes : Int
 
     init {
 
-        var wrongAnswerCount = total
+        var wrongAnswerCount = numberOfWordsTested
 
         println("input      = $wordList")
         println("answers    = $answers")
@@ -33,6 +35,7 @@ class TestResult(answers : WordList, wordList: WordList) {
 
         }
         mistakes = wrongAnswerCount
+        resultLabel = Label("Results: ${numberOfWordsTested-mistakes}/$numberOfWordsTested correct")
     }
 
     fun createVBox(score : Int) : VBox {
@@ -46,11 +49,9 @@ class TestResult(answers : WordList, wordList: WordList) {
         layout.padding = Insets(15.0, 12.0, 0.0, 12.0)
         layout.alignment = Pos.TOP_CENTER
         layout.prefHeight = 300.0
-        layout.children.addAll(header, createLabel())
+        layout.children.addAll(header, resultLabel)
 
         return layout
     }
-    fun createLabel() : Label {
-        return Label("Results: ${total-mistakes}/$total correct")
-    }
+
 }
