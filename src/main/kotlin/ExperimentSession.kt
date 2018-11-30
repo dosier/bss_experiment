@@ -1,3 +1,4 @@
+import WordListCategory.*
 import com.eclipsesource.json.JsonArray
 import com.eclipsesource.json.JsonObject
 import com.eclipsesource.json.WriterConfig
@@ -54,20 +55,34 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
     private val wordLabel = Label()
     private val experimentInformation = TextArea()
 
+    /**
+     * Create a [Scene] containing the visual and interactive components of this [ExperimentSession].
+     */
+    fun buildScene() : Scene {
+        return Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT)
+    }
+
     init {
 
-        answers[WordListCategory.EASY_TO_READ_WORDS] = Array(wordLists[WordListCategory.EASY_TO_READ_WORDS]!!.size) {LinkedList<String>()}
-        answers[WordListCategory.HARD_TO_READ_WORDS] = Array(wordLists[WordListCategory.HARD_TO_READ_WORDS]!!.size) {LinkedList<String>()}
-        score[WordListCategory.EASY_TO_READ_WORDS] = 0
-        score[WordListCategory.HARD_TO_READ_WORDS] = 0
+        /*
+         * Fill the answers and score map with a default value.
+         */
+        answers[EASY_TO_READ_WORDS] = Array(wordLists[EASY_TO_READ_WORDS]!!.size) {LinkedList<String>()}
+        answers[HARD_TO_READ_WORDS] = Array(wordLists[HARD_TO_READ_WORDS]!!.size) {LinkedList<String>()}
+        score[EASY_TO_READ_WORDS] = 0
+        score[HARD_TO_READ_WORDS] = 0
 
-        val leftHBox = createLeftHBox()
-        updateExperimentInformation()
+        /*
+         * Set the properties of the visual and interactive components of the scene.
+         */
         experimentInformation.isWrapText = true
         experimentInformation.isEditable = false
-        leftHBox.children.add(experimentInformation)
+        updateExperimentInformation()
+        wordLabel.textAlignment = TextAlignment.CENTER
+        wordLabel.isVisible = false
+        updateWordLabel()
 
-        val rightHBox = createRightHBox()
+        // Create a start button that triggers the timeline
         val startButton = Button("Start")
         startButton.setOnAction {
             startButton.isVisible = false
@@ -75,24 +90,42 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
             wordLabel.isVisible = true
             timeLine.play()
         }
+
+        // Create a left aligned pane that contains the experiment information (TextArea)
+        val leftHBox = createLeftHBox()
+        leftHBox.children.add(experimentInformation)
+        // Create a right aligned pane that contains the start button
+        val rightHBox = createRightHBox()
         rightHBox.children.add(startButton)
 
-        updateWordLabel()
-        wordLabel.textAlignment = TextAlignment.CENTER
-        wordLabel.isVisible = false
+        /*
+         * Add the sub-panes and the text-label to the main pane
+         */
+        root.children.addAll(leftHBox, rightHBox, wordLabel)
 
-        root.children.add(leftHBox)
-        root.children.add(rightHBox)
-        root.children.add(wordLabel)
-
+        /*
+         * Set the alignment of the sub-panes and the text-label with respect to the main pane
+         */
         StackPane.setAlignment(leftHBox, Pos.CENTER_LEFT)
         StackPane.setAlignment(rightHBox, Pos.CENTER_RIGHT)
         StackPane.setAlignment(wordLabel, Pos.CENTER)
 
+        /*
+         * Create a copy of the first presented WordList (this object is overridden at next list selection)
+         */
         var wordListCopy = WordList()
         wordListCopy.addAll(wordLists[currentCategory]!![currentListIndex])
 
+
+        // Define the duration of the timeline (the amount of frames, one frame has a duration of one second.
         timeLine.cycleCount = wordListCopy.size + 1
+        /*
+         * Define the KeyFrame:
+         * - displays all words in the current list
+         * - prompts the user for an answer
+         * - verifies the answer and measures the result
+         * - executes the appropriate behaviour to the measured result
+         */
         timeLine.keyFrames.add(
             KeyFrame(
                 Duration.seconds(DISPLAY_INTERVAL_IN_SECONDS),
@@ -174,7 +207,7 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
                                     if(failed || completedCategory){
                                         completedCategories++
 
-                                        if(completedCategories == WordListCategory.values().size){
+                                        if(completedCategories == values().size){
                                             wordLabel.text = "You completed the experiment, thank you!"
                                             wordLabel.prefWidth = 700.0
                                             wordLabel.prefHeight = 60.0
@@ -231,11 +264,7 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
         )
     }
 
-    fun build() : Scene {
-        return Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT)
-    }
-
-    fun serialize() : JsonObject {
+    private fun serialize() : JsonObject {
         val sessionSerialized = JsonObject()
 
         val scores = JsonObject()

@@ -27,7 +27,7 @@ public class ExperimentScreen extends Application {
         wordListCategoryHashMap.put(WordListCategory.HARD_TO_READ_WORDS, WordList.Companion.getHARD_LISTS());
 
         final ExperimentSession sceneBuilder = new ExperimentSession(WordListCategory.EASY_TO_READ_WORDS, wordListCategoryHashMap);
-        final Scene scene = sceneBuilder.build();
+        final Scene scene = sceneBuilder.buildScene();
         scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 
         primaryStage.setTitle("BSS Experiment");
