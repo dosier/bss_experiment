@@ -1,0 +1,44 @@
+.text-area {
+    -fx-font-family: Consolas;
+    -fx-font-size: 18;
+    -fx-display-caret:true;
+    /*-fx-text-box-border: red ;*/
+}
+.button {
+    -fx-background-color:
+            #000000,
+            linear-gradient(#7ebcea, #2f4b8f),
+            linear-gradient(#426ab7, #263e75),
+            linear-gradient(#395cab, #223768);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 12 30 12 30;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+}
+.button:hover {
+    -fx-background-color:
+            #000000,
+            linear-gradient(#95ccea, #415e8f),
+            linear-gradient(#5274b7, #3f4f75),
+            linear-gradient(#5379ab, #354668);
+}
+.button Text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.8) , 0, 0.0 , 0 , 1);
+}
+.root {
+    -fx-background-image: url("background2.jpg");
+}
+.label {
+    -fx-background-color: #f4fbff;
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 20;
+    -fx-alignment: center;
+    -fx-pref-width: 200;
+    -fx-pref-height: 60;
+}
+.label Text {
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}

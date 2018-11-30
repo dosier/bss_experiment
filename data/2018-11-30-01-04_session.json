@@ -1,0 +1,36 @@
+{
+  "score": {
+    "HARD_TO_READ_WORDS": 1,
+    "EASY_TO_READ_WORDS": 1
+  },
+  "details": {
+    "HARD_TO_READ_WORDS": {
+      "index-0": {
+        "answers": [
+          "foo1",
+          "foo2",
+          "foo3"
+        ],
+        "list": [
+          "foo1",
+          "foo2",
+          "foo3"
+        ]
+      }
+    },
+    "EASY_TO_READ_WORDS": {
+      "index-0": {
+        "answers": [
+          "test1",
+          "test2",
+          "test3"
+        ],
+        "list": [
+          "test1",
+          "test2",
+          "test3"
+        ]
+      }
+    }
+  }
+}

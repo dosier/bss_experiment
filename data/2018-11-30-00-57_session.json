@@ -1,0 +1,60 @@
+{
+  "score": {
+    "HARD_TO_READ_WORDS": 2,
+    "EASY_TO_READ_WORDS": 2
+  },
+  "details": {
+    "HARD_TO_READ_WORDS": {
+      "index-0": {
+        "answers": [
+          "foo1",
+          "foo2",
+          "foo3"
+        ],
+        "list": [
+          "foo1",
+          "foo2",
+          "foo3"
+        ]
+      },
+      "index-1": {
+        "answers": [
+          "apple1",
+          "apple2",
+          "peer"
+        ],
+        "list": [
+          "apple1",
+          "apple2",
+          "apple3"
+        ]
+      }
+    },
+    "EASY_TO_READ_WORDS": {
+      "index-0": {
+        "answers": [
+          "test1",
+          "test2",
+          "test3"
+        ],
+        "list": [
+          "test1",
+          "test2",
+          "test3"
+        ]
+      },
+      "index-1": {
+        "answers": [
+          "boo2",
+          "boo1",
+          "boo333333"
+        ],
+        "list": [
+          "boo1",
+          "boo2",
+          "boo3"
+        ]
+      }
+    }
+  }
+}
