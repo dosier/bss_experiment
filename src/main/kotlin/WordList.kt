@@ -2,9 +2,9 @@ import com.eclipsesource.json.JsonArray
 import java.util.*
 
 /**
- * TODO: add documentation
+ * A [LinkedList] containing [String] values.
  *
- * @author  Stan van der Bend (https://www.rune-server.ee/members/StanDev/)
+ * @author  Stan van der Bend
  * @since   2018-11-29
  * @version 1.0
  */
