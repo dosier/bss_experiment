@@ -5,9 +5,9 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 
 /**
- * TODO: add documentation
+ * This is the starting point of the application.
  *
- * @author Stan van der Bend (https://www.rune-server.ee/members/StanDev/)
+ * @author Stan van der Bend
  * @version 1.0
  * @since 2018-11-29
  */
