@@ -140,6 +140,7 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
                                 }
                                 val mistakes = wrongAnswerCount + wrongOrderCount
                                 val failed = mistakes > 0
+                                val completedCategory = currentListIndex + 1 == wordLists[currentCategory]!!.size
 
                                 val popupWindow = Stage()
                                 popupWindow.initModality(Modality.APPLICATION_MODAL)
@@ -161,7 +162,7 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
                                     Label("Wrong answers: $wrongAnswerCount"),
                                     Label("Wrong ordered answers: $wrongOrderCount"))
 
-                                val popupButton = if (failed)
+                                val popupButton = if (failed || completedCategory)
                                     Button("Submit category score")
                                 else
                                     Button("Show next list")
@@ -170,7 +171,7 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
 
                                     popupWindow.close()
 
-                                    if(failed){
+                                    if(failed || completedCategory){
                                         completedCategories++
 
                                         if(completedCategories == WordListCategory.values().size){
@@ -210,11 +211,6 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
                                     } else {
 
                                         currentListIndex++
-                                        if(currentListIndex == wordLists[currentCategory]!!.size){
-                                            println("User completed all lists, godlike!")
-                                            return@setOnAction
-                                        }
-
                                         timeLine.playFromStart()
                                     }
 
@@ -250,24 +246,25 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
 
         val details = JsonObject()
 
-        for (entry in score.entries){
+        for (category in answers.keys){
 
+            val answersInCategory = answers[category]!!
             val categoryDetails = JsonObject()
 
-            for (index in 0 until entry.value){
+            for(listIndex in 0 until answersInCategory.size) {
+
                 val listDetails = JsonObject()
 
                 val answerDetails = JsonArray()
-                for(answer in answers[entry.key]!![index]){
+                for (answer in answersInCategory[listIndex])
                     answerDetails.add(answer)
-                }
 
                 listDetails.add("answers", answerDetails)
-                listDetails.add("list", wordLists[entry.key]!![index].serialize())
+                listDetails.add("list", wordLists[category]!![listIndex].serialize())
 
-                categoryDetails.add("index-$index", listDetails)
+                categoryDetails.add("index-$listIndex", listDetails)
             }
-            details.add(entry.key.name, categoryDetails)
+            details.add(category.name, categoryDetails)
         }
         sessionSerialized.add("details", details)
         return sessionSerialized
