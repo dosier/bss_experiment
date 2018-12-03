@@ -1,7 +1,11 @@
 import com.eclipsesource.json.JsonObject
 
 /**
- * TODO: add documentation
+ * The [ExperimentParticipant] is a person that will be randomly added to one of two [ExperimentGroup].
+ *
+ * @param name      the full name of the person
+ * @param age       the age in years of this person
+ * @param education the [Education] this person attends
  *
  * @author  Stan van der Bend
  * @since   2018-12-03
