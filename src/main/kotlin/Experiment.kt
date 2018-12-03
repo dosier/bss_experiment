@@ -1,6 +1,8 @@
 import ExperimentParticipant.Companion.Education
 import com.eclipsesource.json.Json
+import com.eclipsesource.json.WriterConfig
 import java.io.FileReader
+import java.io.FileWriter
 import java.nio.file.Paths
 import java.util.*
 
@@ -31,6 +33,21 @@ class Experiment {
             ExperimentGroup(GROUP_B, GROUP_SIZE, WordListCategory.HARD_TO_READ_WORDS)
         } else
             ExperimentGroup.deserialize(Json.parse(FileReader(groupBDataFile)).asObject())
+    }
+
+    fun save() {
+        val groupADataFile = savePath.resolve(GROUP_A).toFile()
+        val groupBDataFile = savePath.resolve(GROUP_B).toFile()
+
+        var fileWriter = FileWriter(groupADataFile)
+        groupA.serialize().writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
+        fileWriter.flush()
+
+        fileWriter = FileWriter(groupBDataFile)
+        groupB.serialize().writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
+        fileWriter.flush()
+
+        fileWriter.close()
     }
 
     fun createSession() : Optional<ExperimentSession> {
