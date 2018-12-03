@@ -5,11 +5,11 @@ import com.eclipsesource.json.JsonValue
 /**
  * TODO: add documentation
  *
- * @author  Stan van der Bend (https://www.rune-server.ee/members/StanDev/)
+ * @author  Stan van der Bend
  * @since   2018-12-03
  * @version 1.0
  */
-class ExperimentGroup(val identifier : String, private val size : Int, val firstListCategory : WordListCategory) {
+class ExperimentGroup(private val identifier : String, private val size : Int, val firstListCategory : WordListCategory) {
 
     private val participants = HashSet<ExperimentParticipant>(size)
 

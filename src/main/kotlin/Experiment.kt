@@ -7,9 +7,12 @@ import java.nio.file.Paths
 import java.util.*
 
 /**
- * TODO: add documentation
+ * The [Experiment] class manages the [ExperimentGroup] selection and creates the [ExperimentSession] for the [ExperimentParticipant].
  *
- * @author  Stan van der Bend (https://www.rune-server.ee/members/StanDev/)
+ * @see groupA the [ExperimentGroup] starting with the [WordListCategory.EASY_TO_READ_WORDS]
+ * @see groupB the [ExperimentGroup] starting with the [WordListCategory.HARD_TO_READ_WORDS]
+ *
+ * @author  Stan van der Bend
  * @since   2018-12-03
  * @version 1.0
  */
@@ -50,7 +53,7 @@ class Experiment {
         fileWriter.close()
     }
 
-    fun createSession() : Optional<ExperimentSession> {
+    fun buildSession() : Optional<ExperimentSession> {
 
         val name = promptForName()
         val age = promptForAge()

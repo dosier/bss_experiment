@@ -20,7 +20,7 @@ public class ExperimentScreen extends Application {
 
         final Experiment experiment = new Experiment();
 
-        experiment.createSession().ifPresent(experimentSession -> {
+        experiment.buildSession().ifPresent(experimentSession -> {
             final Scene scene = experimentSession.buildScene();
             scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 
