@@ -1,24 +1,27 @@
 import com.eclipsesource.json.JsonArray
 import com.eclipsesource.json.JsonObject
-import com.eclipsesource.json.JsonValue
 
 /**
- * TODO: add documentation
+ * The [ExperimentGroup] contains [ExperimentParticipant] instances created at [Experiment.buildSession].
+ *
+ * @param identifier        the [String] identifier of this group aka file name.
+ * @param maxCapacity       the maximum capacity of [participants].
+ * @param firstListCategory the first [WordListCategory] from which [WordList]s are selected in the [ExperimentSession].
  *
  * @author  Stan van der Bend
  * @since   2018-12-03
  * @version 1.0
  */
-class ExperimentGroup(private val identifier : String, private val size : Int, val firstListCategory : WordListCategory) {
+class ExperimentGroup(private val identifier : String, private val maxCapacity : Int, val firstListCategory : WordListCategory) {
 
-    private val participants = HashSet<ExperimentParticipant>(size)
+    private val participants = HashSet<ExperimentParticipant>(maxCapacity)
 
     fun add(participant: ExperimentParticipant) : Boolean{
         return participants.add(participant)
     }
 
     fun isFull() : Boolean {
-        return participants.size == size
+        return participants.size == maxCapacity
     }
 
     fun serialize() : JsonObject {
@@ -26,7 +29,7 @@ class ExperimentGroup(private val identifier : String, private val size : Int, v
         val jsonObject = JsonObject()
 
         jsonObject.add("identifier", identifier)
-        jsonObject.add("capacity", size)
+        jsonObject.add("maxCapacity", maxCapacity)
         jsonObject.add("firstListCategory", firstListCategory.name)
 
         val serializedParticipants = JsonArray()
@@ -48,7 +51,7 @@ class ExperimentGroup(private val identifier : String, private val size : Int, v
         fun deserialize(groupData : JsonObject) : ExperimentGroup {
 
             val identifier = groupData.getString("identifier", "UNDEFINED")
-            val capacity = groupData.getInt("capacity", -1)
+            val capacity = groupData.getInt("maxCapacity", -1)
             val firstListCategory = WordListCategory.valueOf(groupData.getString("firstListCategory", "NONE"))
 
             val group = ExperimentGroup(identifier, capacity, firstListCategory)
