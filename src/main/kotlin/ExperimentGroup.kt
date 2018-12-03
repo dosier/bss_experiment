@@ -1,5 +1,6 @@
 import com.eclipsesource.json.JsonArray
 import com.eclipsesource.json.JsonObject
+import com.eclipsesource.json.JsonValue
 
 /**
  * TODO: add documentation
@@ -8,7 +9,7 @@ import com.eclipsesource.json.JsonObject
  * @since   2018-12-03
  * @version 1.0
  */
-class ExperimentGroup(private val size : Int, val firstListCategory : WordListCategory) {
+class ExperimentGroup(val identifier : String, private val size : Int, val firstListCategory : WordListCategory) {
 
     private val participants = HashSet<ExperimentParticipant>(size)
 
@@ -24,6 +25,8 @@ class ExperimentGroup(private val size : Int, val firstListCategory : WordListCa
 
         val jsonObject = JsonObject()
 
+        jsonObject.add("identifier", identifier)
+        jsonObject.add("capacity", size)
         jsonObject.add("firstListCategory", firstListCategory.name)
 
         val serializedParticipants = JsonArray()
@@ -38,6 +41,25 @@ class ExperimentGroup(private val size : Int, val firstListCategory : WordListCa
 
     override fun toString(): String {
         return "ExperimentGroup(firstListCategory=$firstListCategory)"
+    }
+
+    companion object {
+
+        fun deserialize(groupData : JsonObject) : ExperimentGroup {
+
+            val identifier = groupData.getString("identifier", "UNDEFINED")
+            val capacity = groupData.getInt("capacity", -1)
+            val firstListCategory = WordListCategory.valueOf(groupData.getString("firstListCategory", "NONE"))
+
+            val group = ExperimentGroup(identifier, capacity, firstListCategory)
+
+            val serializedParticipants = groupData.get("participants").asArray()
+
+            for (serializedParticipant in serializedParticipants)
+                group.add(ExperimentParticipant.deserialize(serializedParticipant.asObject()))
+
+            return group
+        }
     }
 
 }

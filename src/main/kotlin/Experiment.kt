@@ -1,5 +1,8 @@
 
 import ExperimentParticipant.Companion.Education
+import com.eclipsesource.json.Json
+import java.io.FileReader
+import java.nio.file.Paths
 import java.util.*
 
 /**
@@ -11,8 +14,25 @@ import java.util.*
  */
 class Experiment {
 
-    private val groupA = ExperimentGroup(GROUP_SIZE, WordListCategory.EASY_TO_READ_WORDS)
-    private val groupB = ExperimentGroup(GROUP_SIZE, WordListCategory.HARD_TO_READ_WORDS)
+    private val groupA : ExperimentGroup
+    private val groupB : ExperimentGroup
+
+    init {
+        val groupADataFile = savePath.resolve(GROUP_A).toFile()
+        val groupBDataFile = savePath.resolve(GROUP_B).toFile()
+
+        groupA = if(!groupADataFile.exists()) {
+            groupADataFile.mkdirs()
+            ExperimentGroup(GROUP_A, GROUP_SIZE, WordListCategory.EASY_TO_READ_WORDS)
+        } else
+            ExperimentGroup.deserialize(Json.parse(FileReader(groupADataFile)).asObject())
+
+        groupB = if(!groupBDataFile.exists()) {
+            groupBDataFile.mkdirs()
+            ExperimentGroup(GROUP_B, GROUP_SIZE, WordListCategory.HARD_TO_READ_WORDS)
+        } else
+            ExperimentGroup.deserialize(Json.parse(FileReader(groupBDataFile)).asObject())
+    }
 
     fun createSession() : Optional<ExperimentSession> {
 
@@ -39,7 +59,6 @@ class Experiment {
 
         return Optional.of(session)
     }
-
 
     private fun promptForName() : String {
         println("Please enter the participant's name:")
@@ -72,12 +91,16 @@ class Experiment {
     }
 
     companion object {
+
         const val GROUP_SIZE = 8
+        const val GROUP_A = "GroupA"
+        const val GROUP_B = "GroupB"
+
+        val savePath = Paths.get("data")!!
 
         val allWordLists = hashMapOf(
             Pair(WordListCategory.EASY_TO_READ_WORDS, WordList.EASY_LISTS),
             Pair(WordListCategory.HARD_TO_READ_WORDS, WordList.HARD_LISTS)
         )
-
     }
 }
