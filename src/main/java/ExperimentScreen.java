@@ -2,8 +2,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-
 /**
  * This is the starting point of the application.
  *
@@ -20,18 +18,16 @@ public class ExperimentScreen extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        final Experiment experiment = new Experiment();
 
-        final HashMap<WordListCategory, WordList[]> wordListCategoryHashMap = new HashMap<>();
+        experiment.createSession().ifPresent(experimentSession -> {
+            final Scene scene = experimentSession.buildScene();
+            scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 
-        wordListCategoryHashMap.put(WordListCategory.EASY_TO_READ_WORDS, WordList.Companion.getEASY_LISTS());
-        wordListCategoryHashMap.put(WordListCategory.HARD_TO_READ_WORDS, WordList.Companion.getHARD_LISTS());
+            primaryStage.setTitle("BSS Experiment");
+            primaryStage.setScene(scene);
+            primaryStage.show(); // wait till the user entered an answer
+        });
 
-        final ExperimentSession sceneBuilder = new ExperimentSession(WordListCategory.EASY_TO_READ_WORDS, wordListCategoryHashMap);
-        final Scene scene = sceneBuilder.buildScene();
-        scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
-
-        primaryStage.setTitle("BSS Experiment");
-        primaryStage.setScene(scene);
-        primaryStage.show(); // wait till the user entered an answer
     }
 }

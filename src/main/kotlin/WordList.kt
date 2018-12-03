@@ -37,5 +37,4 @@ class WordList(vararg words: String) : LinkedList<String>() {
 
     }
 
-
 }

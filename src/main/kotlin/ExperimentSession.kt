@@ -46,7 +46,8 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
     private val answers = HashMap<WordListCategory, Array<WordList>>()
     private val score = HashMap<WordListCategory, Int>()
 
-    private val savePath = Paths.get("data", "${timeStampPattern.format(LocalDateTime.now())}_session.json")
+    private val dataPath = Paths.get("data")
+    private val savePath = dataPath.resolve("${timeStampPattern.format(LocalDateTime.now())}_session.json")
 
     private val root = StackPane()
     private val timeLine = Timeline()
@@ -61,6 +62,8 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
     }
 
     init {
+
+        dataPath.toFile().mkdirs()
 
         /*
          * Fill the answers and score map with a default value.
