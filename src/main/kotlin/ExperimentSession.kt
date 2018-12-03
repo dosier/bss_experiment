@@ -158,7 +158,7 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
                                 for (word in split)
                                     currentListAnswers.add(word.trim())
 
-                                val testResult = TestResult(currentListAnswers, wordList)
+                                val testResult = WordListScore(currentListAnswers, wordList)
 
                                 val completedAllListsInCategory = currentListIndex + 1 == currentCategoryLists.size
                                 val failedCurrentList = testResult.mistakes > 0

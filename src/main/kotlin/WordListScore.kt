@@ -4,7 +4,7 @@ import javafx.scene.control.Label
 import javafx.scene.layout.VBox
 
 /**
- * A [TestResult] handles the user input, it counts the mistakes and offers functionality to display the result.
+ * A [WordListScore] handles the user input, it counts the mistakes and offers functionality to display the result.
  *
  * @see createVBox called by [ExperimentScreen] after submission of an answer by the user
  *
@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox
  * @since   2018-11-30
  * @version 1.0
  */
-class TestResult(answers : WordList, wordList: WordList) {
+class WordListScore(answers : WordList, wordList: WordList) {
 
     private val numberOfWordsTested = wordList.size
     private val resultLabel : Label

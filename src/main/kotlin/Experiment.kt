@@ -1,4 +1,3 @@
-
 import ExperimentParticipant.Companion.Education
 import com.eclipsesource.json.Json
 import java.io.FileReader
