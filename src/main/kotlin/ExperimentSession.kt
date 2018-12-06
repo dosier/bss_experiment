@@ -5,6 +5,7 @@ import com.eclipsesource.json.WriterConfig
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
 import javafx.application.Platform
+import javafx.beans.binding.Bindings
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Pos
@@ -22,6 +23,14 @@ import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.collections.HashMap
+import javafx.beans.binding.Bindings.createBooleanBinding
+import javafx.scene.input.KeyCode
+import javafx.scene.text.Font
+import javafx.scene.text.Text
+import javafx.scene.text.TextFlow
+import java.util.concurrent.Callable
+import kotlin.math.exp
+
 
 /**
  * A [ExperimentSession] is the class handling the behaviour of the experiment.
@@ -36,7 +45,7 @@ import kotlin.collections.HashMap
  * @since   2018-11-29
  * @version 1.0
  */
-class ExperimentSession(startCategory: WordListCategory, private val wordLists: HashMap<WordListCategory, Array<WordList>>)  {
+class ExperimentSession(startCategory: WordListCategory, private val participant: ExperimentParticipant, private val wordLists: HashMap<WordListCategory, Array<WordList>>)  {
 
     private var completedCategories = 0
 
@@ -46,13 +55,10 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
     private val answers = HashMap<WordListCategory, Array<WordList>>()
     private val score = HashMap<WordListCategory, Int>()
 
-    private val dataPath = Paths.get("data")
-    private val savePath = dataPath.resolve("${timeStampPattern.format(LocalDateTime.now())}_session.json")
-
     private val root = StackPane()
     private val timeLine = Timeline()
     private val wordLabel = Label()
-    private val experimentInformation = TextArea()
+    private val experimentInformation = TextFlow()
 
     /**
      * Create a [Scene] containing the visual and interactive components of this [ExperimentSession].
@@ -62,8 +68,6 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
     }
 
     init {
-
-        dataPath.toFile().mkdirs()
 
         /*
          * Fill the answers and score map with a default value.
@@ -77,8 +81,6 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
         /*
          * Set the properties of the visual and interactive components of the scene.
          */
-        experimentInformation.isWrapText = true
-        experimentInformation.isEditable = false
         updateExperimentInformation()
         wordLabel.textAlignment = TextAlignment.CENTER
         wordLabel.isVisible = false
@@ -151,20 +153,26 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
 
                             val answer = textInputDialog.showAndWait()
 
+
                             answer.ifPresent { input ->
+
+                                if(input.isEmpty()){
+
+                                }
 
                                 val split = input.split(",")
 
                                 for (word in split)
                                     currentListAnswers.add(word.trim())
 
-                                val testResult = WordListScore(currentListAnswers, wordList)
+                                val testResult = WordListScore(currentListIndex, currentListAnswers, wordList)
+                                val failedCurrentList = testResult.mistakes > 0
+                                val currentScore = testResult.score
+
+                                participant.scores[currentCategory] = testResult
+                                score[currentCategory] = currentScore
 
                                 val completedAllListsInCategory = currentListIndex + 1 == currentCategoryLists.size
-                                val failedCurrentList = testResult.mistakes > 0
-
-                                val currentScore = currentListIndex + if(failedCurrentList) 0 else 1
-                                score[currentCategory] = currentScore
 
                                 val popupWindow = createPopUpWindow()
                                 val popupLayout = testResult.createVBox(currentScore)
@@ -216,80 +224,44 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
                 })
         )
     }
-
-    private fun serialize() : JsonObject {
-        val sessionSerialized = JsonObject()
-
-        val scores = JsonObject()
-        for (entry in score.entries)
-            scores.add(entry.key.name, entry.value)
-
-        sessionSerialized.add("score", scores)
-
-        val details = JsonObject()
-
-        for (category in answers.keys){
-
-            val answersInCategory = answers[category]!!
-            val categoryDetails = JsonObject()
-
-            for(listIndex in 0 until answersInCategory.size) {
-
-                val answersInList = answersInCategory[listIndex]
-
-                if(answersInList.isEmpty())
-                    continue
-
-                val listDetails = JsonObject()
-
-                val answerDetails = JsonArray()
-                for (answer in answersInList)
-                    answerDetails.add(answer)
-
-                listDetails.add("answers", answerDetails)
-                listDetails.add("list", wordLists[category]!![listIndex].serialize())
-
-                categoryDetails.add("index-$listIndex", listDetails)
-            }
-            details.add(category.name, categoryDetails)
-        }
-        sessionSerialized.add("details", details)
-        return sessionSerialized
-    }
-    private fun updateWordLabel(){
-        wordLabel.font = currentCategory.font
-        wordLabel.textFill = currentCategory.color
-    }
-
-    private fun updateExperimentInformation(){
-        experimentInformation.text = "Experiment details:\n\n" +
-                "Your current list-category is $currentCategory\n\n" +
-                "When you press start, each word in the list is displayed with an interval of 1 second.\n" +
-                "After all words have been displayed, a text area will popup in which you may enter the words you can recall.\n" +
-                "To pass the test, the words must also be answered in the same order as they were displayed."
-    }
-
     private fun completeExperiment() {
         wordLabel.text = "You completed the experiment, thank you!"
         wordLabel.prefWidth = 700.0
         wordLabel.prefHeight = 60.0
         wordLabel.textFill = Color.BLACK
 
-        val serialized = serialize()
-        val file = savePath.toFile()
-        val fileWriter = FileWriter(file)
+        ExperimentResult(participant, wordLists, score, answers).save()
+    }
 
-        if(file.mkdirs())
-            println("Created dirs at $savePath")
-        if(file.createNewFile())
-            println("Created file at $savePath")
+    private fun updateWordLabel(){
+        wordLabel.font = currentCategory.font
+        wordLabel.textFill = currentCategory.color
+    }
 
-        serialized.writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
+    private fun updateExperimentInformation() {
 
-        fileWriter.flush()
-        fileWriter.close()
+        val textHeader = Text("Experiment details: \n\n")
+        textHeader.font = Font.font ("Verdana", 30.0)
+        textHeader.fill = Color.WHITE
 
-        println("Completed session!")
+        val textCategory = Text("Your current list-category is: \n")
+        textCategory.font = Font.font ("Verdana", 15.0)
+        textCategory.fill = Color.WHITE
+
+        val actualCategory = Text("$currentCategory \n\n")
+        actualCategory.style = "-fx-fill: #4F8A10;-fx-font-weight:bold;"
+        actualCategory.font = Font.font("Verdana", 17.0)
+
+        val textBody = Text()
+        textBody.font = Font.font ("Verdana", 15.0)
+        textBody.fill = Color.WHITE
+        textBody.text =
+                "When you press start, each word in the list is displayed with an interval of 1 second.\n" +
+                "After all words have been displayed, a text area will popup in which you may enter the words you can recall.\n" +
+                "To pass the test, the words must also be answered in the same order as they were displayed.\n\n" +
+                "First you will do a test round to get familiar with the mechanics."
+        experimentInformation.children.clear()
+        experimentInformation.children.addAll(textHeader, textCategory, actualCategory, textBody)
     }
 
     private fun createPopUpWindow() : Stage{
@@ -323,6 +295,12 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
         textInputDialog.headerText = "Please enter all the words you are able to recall, separated by a comma!"
         textInputDialog.contentText = "Answer:"
         textInputDialog.dialogPane.lookupButton(ButtonType.CANCEL).isVisible = false
+        textInputDialog.dialogPane.lookupButton(ButtonType.OK).disableProperty().bind(
+            Bindings.createBooleanBinding(Callable {
+                textInputDialog.editor.text.trim().isEmpty()
+            }, textInputDialog.editor.textProperty()))
+
+        textInputDialog.editor.prefHeight(200.0)
         return textInputDialog
     }
 
@@ -337,6 +315,6 @@ class ExperimentSession(startCategory: WordListCategory, private val wordLists: 
         const val DISPLAY_INTERVAL_IN_SECONDS = 1.0
 
         const val ANSWER_DIALOG_TITLE = "Answer Dialog"
-        val timeStampPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm")!!
+
     }
 }

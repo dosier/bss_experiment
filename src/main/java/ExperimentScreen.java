@@ -21,14 +21,14 @@ public class ExperimentScreen extends Application {
         final Experiment experiment = new Experiment();
 
         experiment.buildSession().ifPresent(experimentSession -> {
+
             final Scene scene = experimentSession.buildScene();
+
             scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 
             primaryStage.setTitle("BSS Experiment");
             primaryStage.setScene(scene);
-            primaryStage.showAndWait();
-            
-            experiment.save();
+            primaryStage.show();
         });
     }
 }

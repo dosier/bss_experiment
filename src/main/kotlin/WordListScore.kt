@@ -1,3 +1,4 @@
+import com.eclipsesource.json.JsonObject
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Label
@@ -12,11 +13,12 @@ import javafx.scene.layout.VBox
  * @since   2018-11-30
  * @version 1.0
  */
-class WordListScore(answers : WordList, wordList: WordList) {
+class WordListScore(listIndex : Int, answers : WordList, wordList: WordList) {
 
     private val numberOfWordsTested = wordList.size
     private val resultLabel : Label
     val mistakes : Int
+    val score : Int
 
     init {
 
@@ -35,6 +37,7 @@ class WordListScore(answers : WordList, wordList: WordList) {
 
         }
         mistakes = wrongAnswerCount
+        score = listIndex + if(mistakes > 0) 0 else 1
         resultLabel = Label("Results: ${numberOfWordsTested-mistakes}/$numberOfWordsTested correct")
     }
 

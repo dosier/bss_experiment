@@ -11,7 +11,9 @@ import com.eclipsesource.json.JsonObject
  * @since   2018-12-03
  * @version 1.0
  */
-class ExperimentParticipant(private val name : String, private val age : Int, private val education: Education) {
+class ExperimentParticipant(val name : String, private val age : Int, private val education: Education) {
+
+    val scores = HashMap<WordListCategory, WordListScore>()
 
     fun serialize() : JsonObject {
         val jsonObject = JsonObject()
