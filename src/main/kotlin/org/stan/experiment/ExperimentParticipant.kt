@@ -1,4 +1,8 @@
+package org.stan.experiment
+
 import com.eclipsesource.json.JsonObject
+import org.stan.wordlist.WordListCategory
+import org.stan.wordlist.WordListScore
 
 /**
  * The [ExperimentParticipant] is a person that will be randomly added to one of two [ExperimentGroup].

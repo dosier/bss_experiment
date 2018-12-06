@@ -1,3 +1,5 @@
+package org.stan.wordlist
+
 import com.eclipsesource.json.JsonArray
 import java.util.*
 

@@ -1,6 +1,10 @@
+package org.stan.experiment
+
 import com.eclipsesource.json.JsonArray
 import com.eclipsesource.json.JsonObject
 import com.eclipsesource.json.WriterConfig
+import org.stan.wordlist.WordList
+import org.stan.wordlist.WordListCategory
 import java.io.FileWriter
 import java.nio.file.Paths
 import java.time.LocalDateTime

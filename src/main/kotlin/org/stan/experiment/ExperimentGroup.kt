@@ -1,12 +1,15 @@
+package org.stan.experiment
+
 import com.eclipsesource.json.JsonArray
 import com.eclipsesource.json.JsonObject
+import org.stan.wordlist.WordListCategory
 
 /**
- * The [ExperimentGroup] contains [ExperimentParticipant] instances created at [Experiment.buildSession].
+ * The [ExperimentGroup] contains [ExperimentParticipant] instances created at [ExperimentConfiguration.buildSession].
  *
  * @param identifier        the [String] identifier of this group aka file name.
  * @param maxCapacity       the maximum capacity of [participants].
- * @param firstListCategory the first [WordListCategory] from which [WordList]s are selected in the [ExperimentSession].
+ * @param firstListCategory the first [WordListCategory] from which [WordList]s are selected in the [Experiment].
  *
  * @author  Stan van der Bend
  * @since   2018-12-03
@@ -43,7 +46,7 @@ class ExperimentGroup(private val identifier : String, private val maxCapacity :
     }
 
     override fun toString(): String {
-        return "ExperimentGroup(firstListCategory=$firstListCategory)"
+        return "org.stan.experiment.ExperimentGroup(firstListCategory=$firstListCategory)"
     }
 
     companion object {

@@ -1,4 +1,5 @@
-import com.eclipsesource.json.JsonObject
+package org.stan.wordlist
+
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Label

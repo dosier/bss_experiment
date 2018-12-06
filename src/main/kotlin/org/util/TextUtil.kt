@@ -1,4 +1,4 @@
-package util
+package org.util
 
 import java.util.*
 
@@ -27,9 +27,11 @@ object TextUtil {
                 when {
                     i == 0 -> dp[i][j] = j
                     j == 0 -> dp[i][j] = i
-                    else -> dp[i][j] = min(dp[i - 1][j - 1] + costOfSubstitution(a[i - 1], b[j - 1]),
-                            dp[i - 1][j] + 1,
-                            dp[i][j - 1] + 1)
+                    else -> dp[i][j] = min(
+                        dp[i - 1][j - 1] + costOfSubstitution(a[i - 1], b[j - 1]),
+                        dp[i - 1][j] + 1,
+                        dp[i][j - 1] + 1
+                    )
                 }
             }
         }

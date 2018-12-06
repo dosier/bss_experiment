@@ -1,7 +1,6 @@
-import WordListCategory.*
-import com.eclipsesource.json.JsonArray
-import com.eclipsesource.json.JsonObject
-import com.eclipsesource.json.WriterConfig
+package org.stan.experiment
+
+import org.stan.wordlist.WordListCategory.*
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
 import javafx.application.Platform
@@ -18,22 +17,18 @@ import javafx.scene.text.TextAlignment
 import javafx.stage.Modality
 import javafx.stage.Stage
 import javafx.util.Duration
-import java.io.FileWriter
-import java.nio.file.Paths
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import kotlin.collections.HashMap
-import javafx.beans.binding.Bindings.createBooleanBinding
-import javafx.scene.input.KeyCode
 import javafx.scene.text.Font
 import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
+import org.stan.wordlist.WordList
+import org.stan.wordlist.WordListCategory
+import org.stan.wordlist.WordListScore
 import java.util.concurrent.Callable
-import kotlin.math.exp
 
 
 /**
- * A [ExperimentSession] is the class handling the behaviour of the experiment.
+ * A [Experiment] is the class handling the behaviour of the experiment.
  *
  * @param startCategory the initial [WordListCategory] from which lists are retrieved.
  * @param wordLists     a [HashMap] containing every [WordList] for both [WordListCategory].
@@ -45,7 +40,7 @@ import kotlin.math.exp
  * @since   2018-11-29
  * @version 1.0
  */
-class ExperimentSession(startCategory: WordListCategory, private val participant: ExperimentParticipant, private val wordLists: HashMap<WordListCategory, Array<WordList>>)  {
+class Experiment(startCategory: WordListCategory, private val participant: ExperimentParticipant, private val wordLists: HashMap<WordListCategory, Array<WordList>>)  {
 
     private var completedCategories = 0
 
@@ -61,10 +56,13 @@ class ExperimentSession(startCategory: WordListCategory, private val participant
     private val experimentInformation = TextFlow()
 
     /**
-     * Create a [Scene] containing the visual and interactive components of this [ExperimentSession].
+     * Create a [Scene] containing the visual and interactive components of this [Experiment].
      */
     fun buildScene() : Scene {
-        return Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT)
+        return Scene(root,
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT
+        )
     }
 
     init {
@@ -73,8 +71,8 @@ class ExperimentSession(startCategory: WordListCategory, private val participant
          * Fill the answers and score map with a default value.
          */
         val nextCategory = startCategory.other() // this is to maintain the order in the JSON file
-        answers[startCategory] = Array(wordLists[startCategory]!!.size) {WordList()}
-        answers[nextCategory] = Array(wordLists[nextCategory]!!.size) {WordList()}
+        answers[startCategory] = Array(wordLists[startCategory]!!.size) { WordList() }
+        answers[nextCategory] = Array(wordLists[nextCategory]!!.size) { WordList() }
         score[startCategory] = 0
         score[nextCategory] = 0
 
@@ -115,7 +113,7 @@ class ExperimentSession(startCategory: WordListCategory, private val participant
         StackPane.setAlignment(wordLabel, Pos.CENTER)
 
         /*
-         * Create a copy of the first presented WordList (this object is overridden at next list selection)
+         * Create a copy of the first presented org.stan.experiment.wordlist.WordList (this object is overridden at next list selection)
          */
         var wordListCopy = WordList()
         wordListCopy.addAll(wordLists[currentCategory]!![currentListIndex])
@@ -165,7 +163,12 @@ class ExperimentSession(startCategory: WordListCategory, private val participant
                                 for (word in split)
                                     currentListAnswers.add(word.trim())
 
-                                val testResult = WordListScore(currentListIndex, currentListAnswers, wordList)
+                                val testResult =
+                                    WordListScore(
+                                        currentListIndex,
+                                        currentListAnswers,
+                                        wordList
+                                    )
                                 val failedCurrentList = testResult.mistakes > 0
                                 val currentScore = testResult.score
 
@@ -214,7 +217,10 @@ class ExperimentSession(startCategory: WordListCategory, private val participant
 
                                 popupLayout.children.add(popupButton)
 
-                                val popupScene = Scene(popupLayout, POPUP_WIDTH, POPUP_HEIGHT)
+                                val popupScene = Scene(popupLayout,
+                                    POPUP_WIDTH,
+                                    POPUP_HEIGHT
+                                )
                                 popupWindow.scene = popupScene
                                 popupWindow.showAndWait()
                             }
@@ -240,7 +246,7 @@ class ExperimentSession(startCategory: WordListCategory, private val participant
 
     private fun updateExperimentInformation() {
 
-        val textHeader = Text("Experiment details: \n\n")
+        val textHeader = Text("org.stan.experiment.Experiment details: \n\n")
         textHeader.font = Font.font ("Verdana", 30.0)
         textHeader.fill = Color.WHITE
 

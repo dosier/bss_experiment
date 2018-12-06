@@ -1,16 +1,19 @@
-import ExperimentParticipant.Companion.Education
+package org.stan.experiment
+
+import org.stan.experiment.ExperimentParticipant.Companion.Education
 import com.eclipsesource.json.Json
 import com.eclipsesource.json.WriterConfig
-import util.TextUtil
+import org.stan.wordlist.WordList
+import org.stan.wordlist.WordListCategory
+import org.util.TextUtil
 import java.io.FileReader
 import java.io.FileWriter
 import java.lang.Exception
 import java.nio.file.Paths
 import java.util.*
-import javax.swing.plaf.TextUI
 
 /**
- * The [Experiment] class manages the [ExperimentGroup] selection and creates the [ExperimentSession] for the [ExperimentParticipant].
+ * The [ExperimentConfiguration] class manages the [ExperimentGroup] selection and creates the [Experiment] for the [ExperimentParticipant].
  *
  * @see groupA the [ExperimentGroup] starting with the [WordListCategory.EASY_TO_READ_WORDS]
  * @see groupB the [ExperimentGroup] starting with the [WordListCategory.HARD_TO_READ_WORDS]
@@ -19,7 +22,7 @@ import javax.swing.plaf.TextUI
  * @since   2018-12-03
  * @version 1.0
  */
-class Experiment {
+class ExperimentConfiguration {
 
     private val groupA : ExperimentGroup
     private val groupB : ExperimentGroup
@@ -31,32 +34,25 @@ class Experiment {
         val groupBDataFile = savePath.resolve(GROUP_B).toFile()
 
         groupA = if(!groupADataFile.exists())
-            ExperimentGroup(GROUP_A, GROUP_SIZE, WordListCategory.EASY_TO_READ_WORDS)
+            ExperimentGroup(
+                GROUP_A,
+                GROUP_SIZE,
+                WordListCategory.EASY_TO_READ_WORDS
+            )
         else
             ExperimentGroup.deserialize(Json.parse(FileReader(groupADataFile)).asObject())
 
         groupB = if(!groupBDataFile.exists())
-            ExperimentGroup(GROUP_B, GROUP_SIZE, WordListCategory.HARD_TO_READ_WORDS)
+            ExperimentGroup(
+                GROUP_B,
+                GROUP_SIZE,
+                WordListCategory.HARD_TO_READ_WORDS
+            )
         else
             ExperimentGroup.deserialize(Json.parse(FileReader(groupBDataFile)).asObject())
     }
 
-    fun save() {
-        val groupADataFile = savePath.resolve(GROUP_A).toFile()
-        val groupBDataFile = savePath.resolve(GROUP_B).toFile()
-
-        var fileWriter = FileWriter(groupADataFile)
-        groupA.serialize().writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
-        fileWriter.flush()
-
-        fileWriter = FileWriter(groupBDataFile)
-        groupB.serialize().writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
-        fileWriter.flush()
-
-        fileWriter.close()
-    }
-
-    fun buildSession() : Optional<ExperimentSession> {
+    fun buildSession() : Optional<Experiment> {
 
         val name = promptForName()
         val age = promptForAge()
@@ -78,8 +74,27 @@ class Experiment {
         println("Added participant to $selectedGroup")
         save()
 
-        val session = ExperimentSession(selectedGroup.firstListCategory, participant, allWordLists)
+        val session = Experiment(
+            selectedGroup.firstListCategory,
+            participant,
+            allWordLists
+        )
         return Optional.of(session)
+    }
+
+    private fun save() {
+        val groupADataFile = savePath.resolve(GROUP_A).toFile()
+        val groupBDataFile = savePath.resolve(GROUP_B).toFile()
+
+        var fileWriter = FileWriter(groupADataFile)
+        groupA.serialize().writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
+        fileWriter.flush()
+
+        fileWriter = FileWriter(groupBDataFile)
+        groupB.serialize().writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
+        fileWriter.flush()
+
+        fileWriter.close()
     }
 
     private fun promptForName() : String {

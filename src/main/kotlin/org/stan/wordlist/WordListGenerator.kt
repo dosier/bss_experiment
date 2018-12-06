@@ -1,3 +1,5 @@
+package org.stan.wordlist
+
 /**
  * TODO: add documentation
  *

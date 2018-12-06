@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.stan.experiment.ExperimentConfiguration;
 
 /**
  * This is the starting point of the application.
@@ -18,9 +19,9 @@ public class ExperimentScreen extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        final Experiment experiment = new Experiment();
+        final ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration();
 
-        experiment.buildSession().ifPresent(experimentSession -> {
+        experimentConfiguration.buildSession().ifPresent(experimentSession -> {
 
             final Scene scene = experimentSession.buildScene();
 
