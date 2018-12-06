@@ -72,7 +72,7 @@ class Experiment {
 
         selectedGroup.add(participant)
 
-        println("Added participant to $selectedGroup]")
+        println("Added participant to $selectedGroup")
 
         val session = ExperimentSession(selectedGroup.firstListCategory, allWordLists)
 

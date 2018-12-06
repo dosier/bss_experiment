@@ -26,8 +26,9 @@ public class ExperimentScreen extends Application {
 
             primaryStage.setTitle("BSS Experiment");
             primaryStage.setScene(scene);
-            primaryStage.show(); // wait till the user entered an answer
+            primaryStage.showAndWait();
+            
+            experiment.save();
         });
-
     }
 }
