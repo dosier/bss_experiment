@@ -3,6 +3,7 @@ package org.util
 import com.eclipsesource.json.JsonArray
 import com.eclipsesource.json.JsonObject
 import com.eclipsesource.json.WriterConfig
+import org.stan.wordlist.Word
 import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -32,7 +33,6 @@ object WordScanner {
         val results = read().filter {
             it.frequency in MINIMUM_FREQUENCY..MAXIMUM_FREQUENCY
                     && it.word.length == WORD_LENGTH
-                    && lemmas.remove(it.lemma)
         }
 
         val end = System.currentTimeMillis()
@@ -47,8 +47,6 @@ object WordScanner {
         results.forEach { serializedWords.add(it.serialize()) }
         serialized.add("words", serializedWords)
 
-
-
         val out = Paths.get("data", "used_words.json").toFile()
         out.createNewFile()
 
@@ -61,33 +59,10 @@ object WordScanner {
     }
 
     private fun read() : List<Word> {
-        return Files.readAllLines(Paths.get("data", "input_words_raw.txt")).map {
-
-            val split = it.split("\t")
-            val rank = split[0].toInt()
-            val lemma = split[1]
-            val pos = split[2][0]
-            val word = split[3]
-            val frequency = split[4].toInt()
-
-            lemmas.add(lemma)
-
-            Word(rank, lemma, pos, word, frequency)
-        }
-    }
-
-    class Word(val rank : Int, val lemma : String, val pos : Char, val word : String, val frequency : Int){
-
-        override fun toString(): String {
-            return "Word(rank=$rank, lemma='$lemma', pos=$pos, word='$word', frequency=$frequency)"
-        }
-
-        fun serialize() : JsonObject {
-            val jsonObject = JsonObject()
-            jsonObject.add("word", word)
-            jsonObject.add("frequency", frequency)
-            return jsonObject
-        }
+        return Files.readAllLines(Paths.get("data", "input_words_raw.txt"))
+            .map { it.split("\t") }
+            .filter { lemmas.add(it[1]) }
+            .map { Word(it[3], it[4].toInt())  }
     }
 
 }
