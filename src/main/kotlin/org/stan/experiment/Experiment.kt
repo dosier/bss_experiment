@@ -102,6 +102,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
             leftSplitPlane.isVisible = false
             splitPane.isVisible = false
             wordLabel.isVisible = true
+            timeLine.cycleCount = wordLists[currentCategory]!![currentListIndex].size + 1
             timeLine.play()
         }
 
@@ -220,6 +221,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
 
                                     } else {
                                         currentListIndex++
+                                        timeLine.cycleCount++
                                         timeLine.playFromStart()
                                     }
 

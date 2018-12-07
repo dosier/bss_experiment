@@ -5,6 +5,7 @@ import com.eclipsesource.json.Json
 import com.eclipsesource.json.WriterConfig
 import org.stan.wordlist.WordList
 import org.stan.wordlist.WordListCategory
+import org.stan.wordlist.WordListGenerator
 import org.util.TextUtil
 import java.io.FileReader
 import java.io.FileWriter
@@ -28,6 +29,9 @@ class ExperimentConfiguration {
     private val groupB : ExperimentGroup
 
     init {
+
+        WordListGenerator.load()
+
         savePath.toFile().mkdirs()
 
         val groupADataFile = savePath.resolve(GROUP_A).toFile()
@@ -184,8 +188,16 @@ class ExperimentConfiguration {
         val savePath = Paths.get("data", "participants")!!
 
         val allWordLists = hashMapOf(
-            Pair(WordListCategory.EASY_TO_READ_WORDS, WordList.EASY_LISTS),
-            Pair(WordListCategory.HARD_TO_READ_WORDS, WordList.HARD_LISTS)
+            Pair(WordListCategory.EASY_TO_READ_WORDS, arrayOf(
+                WordListGenerator(3).generate(),
+                WordListGenerator(4).generate()
+            )),
+            Pair(WordListCategory.HARD_TO_READ_WORDS,  arrayOf(
+                WordListGenerator(3).generate(),
+                WordListGenerator(4).generate()
+            ))
         )
+
+
     }
 }
