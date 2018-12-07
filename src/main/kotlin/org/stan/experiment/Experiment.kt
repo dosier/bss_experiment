@@ -88,25 +88,27 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         wordLabel.isVisible = false
         updateWordLabel()
 
+        val upperPane = createStackPane(experimentDetails)
+        val lowerPane = createStackPane(participantDetails)
+        val leftSplitPlane = createLeftSplitPane(upperPane, lowerPane)
+        val splitPane = createRightSplitPlane()
+
         // Create a start button that triggers the timeline
         val startButton = Button("Start")
         startButton.setOnAction {
             startButton.isVisible = false
-            experimentDetails.isVisible = false
+            leftSplitPlane.isVisible = false
+            splitPane.isVisible = false
             wordLabel.isVisible = true
             timeLine.play()
         }
 
-        val upperPane = createStackPane(experimentDetails)
-        val lowerPane = createStackPane(participantDetails)
-        val leftSplitPlane = createSplitPane(upperPane, lowerPane)
 
         // Create a right aligned pane that contains the start button
         val rightHBox = createRightHBox()
         rightHBox.children.add(startButton)
 
-        val splitPane = SplitPane()
-        splitPane.background = Background.EMPTY
+
         splitPane.items.addAll(leftSplitPlane, rightHBox)
 
         /*
@@ -160,13 +162,8 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
 
                             val answer = textInputDialog.showAndWait()
 
-
                             answer.ifPresent { input ->
-
-                                if(input.isEmpty()){
-
-                                }
-
+                                
                                 val split = input.split(",")
 
                                 for (word in split)
@@ -212,7 +209,8 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                                         updateExperimentInformation()
 
                                         startButton.isVisible = true
-                                        experimentDetails.isVisible = true
+                                        leftSplitPlane.isVisible = true
+                                        splitPane.isVisible = true
                                         wordLabel.isVisible = false
 
                                     } else {
@@ -311,8 +309,15 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         popupWindow.title = "Prompt"
         return popupWindow
     }
+    private fun createRightSplitPlane() : SplitPane {
+        val splitPlane = SplitPane()
 
-    private fun createSplitPane(upperPane : StackPane, lowerPane: StackPane) : SplitPane {
+        splitPlane.background = Background.EMPTY
+        splitPlane.orientation = Orientation.HORIZONTAL
+
+        return splitPlane
+    }
+    private fun createLeftSplitPane(upperPane : StackPane, lowerPane: StackPane) : SplitPane {
         val splitPlane = SplitPane()
 
         splitPlane.background = Background.EMPTY
