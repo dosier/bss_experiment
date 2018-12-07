@@ -1,10 +1,6 @@
 package org.util
 
-import com.eclipsesource.json.JsonArray
-import com.eclipsesource.json.JsonObject
-import com.eclipsesource.json.WriterConfig
 import org.stan.wordlist.Word
-import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -30,7 +26,7 @@ object WordScanner {
         val start = System.currentTimeMillis()
 
         // we filter words only within the bounded frequency, of the specified length and no duplicate lemma's
-        val results = read().filter {
+        val results = readWordFrequencyWebsite().filter {
             it.frequency in MINIMUM_FREQUENCY..MAXIMUM_FREQUENCY
                     && it.word.length == WORD_LENGTH
         }
@@ -40,29 +36,39 @@ object WordScanner {
 
         println("Scanned ${results.size} words in $duration ms.")
 
-        results.forEach { println(it) }
+//        results.forEach { println(it) }
 
-        val serialized = JsonObject()
-        val serializedWords = JsonArray()
-        results.forEach { serializedWords.add(it.serialize()) }
-        serialized.add("words", serializedWords)
-
-        val out = Paths.get("data", "used_words.json").toFile()
-        out.createNewFile()
-
-        val fileWriter = FileWriter(out)
-
-        serialized.writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
-
-        fileWriter.flush()
-        fileWriter.close()
+//        val serialized = JsonObject()
+//        val serializedWords = JsonArray()
+//        results.forEach { serializedWords.add(it.serialize()) }
+//        serialized.add("words", serializedWords)
+//
+//        val out = Paths.get("data", "other_used_words.json").toFile()
+//        out.createNewFile()
+//
+//        val fileWriter = FileWriter(out)
+//
+//        serialized.writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
+//
+//        fileWriter.flush()
+//        fileWriter.close()
     }
 
-    private fun read() : List<Word> {
+    // this is a list of random words from websites and such
+    private fun readWordFrequencyWebsite() : List<Word> {
         return Files.readAllLines(Paths.get("data", "input_words_raw.txt"))
             .map { it.split("\t") }
             .filter { lemmas.add(it[1]) }
             .map { Word(it[3], it[4].toInt())  }
     }
 
+    // this is a list of subtitles
+    private fun readWordFrequencyGithub() : List<Word> {
+        return Files.readAllLines(Paths.get("data", "en_full.txt"))
+            .map {
+               val split = it.split(" ")
+                Word(split[0], split[1].toInt())
+            }
+
+    }
 }
