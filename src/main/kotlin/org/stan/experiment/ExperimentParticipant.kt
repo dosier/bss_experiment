@@ -15,7 +15,7 @@ import org.stan.wordlist.WordListScore
  * @since   2018-12-03
  * @version 1.0
  */
-class ExperimentParticipant(val name : String, private val age : Int, private val education: Education) {
+class ExperimentParticipant(val name : String, val age : Int, val education: Education) {
 
     val scores = HashMap<WordListCategory, WordListScore>()
 
@@ -31,7 +31,11 @@ class ExperimentParticipant(val name : String, private val age : Int, private va
 
         enum class Education {
             UNIVERSITY,
-            HBO
+            UNIVERSITY_OF_APPLIED_SCIENCES;
+
+            fun formattedName() : String {
+                return name.toLowerCase().trim().capitalize().replace("_", " ")
+            }
         }
 
         fun deserialize(participantData: JsonObject) : ExperimentParticipant {

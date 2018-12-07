@@ -7,9 +7,12 @@ import javafx.application.Platform
 import javafx.beans.binding.Bindings
 import javafx.event.EventHandler
 import javafx.geometry.Insets
+import javafx.geometry.Orientation
 import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.control.*
+import javafx.scene.layout.Background
 import javafx.scene.layout.HBox
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
@@ -53,7 +56,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
     private val root = StackPane()
     private val timeLine = Timeline()
     private val wordLabel = Label()
-    private val experimentInformation = TextFlow()
+    private val experimentDetails = TextFlow()
 
     /**
      * Create a [Scene] containing the visual and interactive components of this [Experiment].
@@ -79,6 +82,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         /*
          * Set the properties of the visual and interactive components of the scene.
          */
+        val participantDetails = createParticipantDetails()
         updateExperimentInformation()
         wordLabel.textAlignment = TextAlignment.CENTER
         wordLabel.isVisible = false
@@ -88,27 +92,32 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         val startButton = Button("Start")
         startButton.setOnAction {
             startButton.isVisible = false
-            experimentInformation.isVisible = false
+            experimentDetails.isVisible = false
             wordLabel.isVisible = true
             timeLine.play()
         }
 
-        // Create a left aligned pane that contains the experiment information (TextArea)
-        val leftHBox = createLeftHBox()
-        leftHBox.children.add(experimentInformation)
+        val upperPane = createStackPane(experimentDetails)
+        val lowerPane = createStackPane(participantDetails)
+        val leftSplitPlane = createSplitPane(upperPane, lowerPane)
+
         // Create a right aligned pane that contains the start button
         val rightHBox = createRightHBox()
         rightHBox.children.add(startButton)
 
+        val splitPane = SplitPane()
+        splitPane.background = Background.EMPTY
+        splitPane.items.addAll(leftSplitPlane, rightHBox)
+
         /*
          * Add the sub-panes and the text-label to the main pane
          */
-        root.children.addAll(leftHBox, rightHBox, wordLabel)
+        root.children.addAll(splitPane, wordLabel)
 
         /*
          * Set the alignment of the sub-panes and the text-label with respect to the main pane
          */
-        StackPane.setAlignment(leftHBox, Pos.CENTER_LEFT)
+        StackPane.setAlignment(leftSplitPlane, Pos.CENTER_LEFT)
         StackPane.setAlignment(rightHBox, Pos.CENTER_RIGHT)
         StackPane.setAlignment(wordLabel, Pos.CENTER)
 
@@ -203,7 +212,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                                         updateExperimentInformation()
 
                                         startButton.isVisible = true
-                                        experimentInformation.isVisible = true
+                                        experimentDetails.isVisible = true
                                         wordLabel.isVisible = false
 
                                     } else {
@@ -246,7 +255,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
 
     private fun updateExperimentInformation() {
 
-        val textHeader = Text("org.stan.experiment.Experiment details: \n\n")
+        val textHeader = Text("Experiment details: \n\n")
         textHeader.font = Font.font ("Verdana", 30.0)
         textHeader.fill = Color.WHITE
 
@@ -261,13 +270,39 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         val textBody = Text()
         textBody.font = Font.font ("Verdana", 15.0)
         textBody.fill = Color.WHITE
-        textBody.text =
-                "When you press start, each word in the list is displayed with an interval of 1 second.\n" +
-                "After all words have been displayed, a text area will popup in which you may enter the words you can recall.\n" +
-                "To pass the test, the words must also be answered in the same order as they were displayed.\n\n" +
-                "First you will do a test round to get familiar with the mechanics."
-        experimentInformation.children.clear()
-        experimentInformation.children.addAll(textHeader, textCategory, actualCategory, textBody)
+        if(completedCategories == 0) {
+            textBody.text =
+                    "When you press start, each word in the list is displayed with an interval of 1 second.\n" +
+                    "After all words have been displayed, a text area will popup in which you may enter the words you can recall.\n" +
+                    "To pass the test, the words must also be answered in the same order as they were displayed.\n\n" +
+                    "First you will do a test round to get familiar with the mechanics."
+        } else {
+            textBody.text =
+                    "You have completed the first category test, press start again to start with the second category!\n\n"
+                    "When you press start, each word in the list is displayed with an interval of 1 second.\n" +
+                    "After all words have been displayed, a text area will popup in which you may enter the words you can recall.\n" +
+                    "To pass the test, the words must also be answered in the same order as they were displayed.\n\n" +
+                    "First you will do a test round to get familiar with the mechanics."
+        }
+        experimentDetails.children.clear()
+        experimentDetails.children.addAll(textHeader, textCategory, actualCategory, textBody)
+    }
+
+    private fun createParticipantDetails() : TextFlow {
+        val textFlow = TextFlow()
+
+        val textHeader = Text("Participant details: \n\n")
+        textHeader.font = Font.font ("Verdana", 30.0)
+        textHeader.fill = Color.WHITE
+
+        val textDetails = Text(
+                "Name: ${participant.name}\n"
+                    + "Age: ${participant.age}\n"
+                    + "Education: ${participant.education.formattedName()}")
+        textDetails.font = Font.font ("Verdana", 15.0)
+        textDetails.fill = Color.WHITE
+        textFlow.children.addAll(textHeader, textDetails)
+        return textFlow
     }
 
     private fun createPopUpWindow() : Stage{
@@ -277,15 +312,31 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         return popupWindow
     }
 
-    private fun createLeftHBox() : HBox {
-        val hBox = HBox()
-        hBox.alignment = Pos.CENTER_LEFT
-        hBox.maxHeight = 500.0
-        hBox.maxWidth = 500.0
-        hBox.padding = Insets(15.0, 12.0, 0.0, 12.0)
-        hBox.spacing = 10.0
-        return hBox
+    private fun createSplitPane(upperPane : StackPane, lowerPane: StackPane) : SplitPane {
+        val splitPlane = SplitPane()
+
+        splitPlane.background = Background.EMPTY
+        splitPlane.orientation = Orientation.VERTICAL
+        splitPlane.items.addAll(upperPane, lowerPane)
+        splitPlane.setDividerPositions(0.6)
+
+        //Constrain max size of left component:
+        upperPane.maxHeightProperty().bind(splitPlane.heightProperty().multiply(0.6))
+        lowerPane.maxHeightProperty().bind(splitPlane.heightProperty().multiply(0.4))
+        splitPlane.maxWidthProperty().bind(root.widthProperty().multiply(0.5))
+        return splitPlane
     }
+
+    private fun createStackPane(node : Node) : StackPane{
+        val stackPane = StackPane(node)
+        stackPane.background = Background.EMPTY
+        stackPane.alignment = Pos.CENTER_LEFT
+        stackPane.maxHeight = 500.0
+        stackPane.maxWidth = 500.0
+        stackPane.padding = Insets(15.0, 12.0, 0.0, 12.0)
+        return stackPane
+    }
+
     private fun createRightHBox() : HBox {
         val hBox = HBox()
         hBox.alignment = Pos.CENTER
