@@ -1,5 +1,9 @@
 package org.util
 
+import com.eclipsesource.json.JsonArray
+import com.eclipsesource.json.JsonObject
+import com.eclipsesource.json.WriterConfig
+import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -37,6 +41,23 @@ object WordScanner {
         println("Scanned ${results.size} words in $duration ms.")
 
         results.forEach { println(it) }
+
+        val serialized = JsonObject()
+        val serializedWords = JsonArray()
+        results.forEach { serializedWords.add(it.serialize()) }
+        serialized.add("words", serializedWords)
+
+
+
+        val out = Paths.get("data", "used_words.json").toFile()
+        out.createNewFile()
+
+        val fileWriter = FileWriter(out)
+
+        serialized.writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
+
+        fileWriter.flush()
+        fileWriter.close()
     }
 
     private fun read() : List<Word> {
@@ -59,6 +80,13 @@ object WordScanner {
 
         override fun toString(): String {
             return "Word(rank=$rank, lemma='$lemma', pos=$pos, word='$word', frequency=$frequency)"
+        }
+
+        fun serialize() : JsonObject {
+            val jsonObject = JsonObject()
+            jsonObject.add("word", word)
+            jsonObject.add("frequency", frequency)
+            return jsonObject
         }
     }
 
