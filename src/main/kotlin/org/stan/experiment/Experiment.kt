@@ -1,10 +1,10 @@
 package org.stan.experiment
 
-import org.stan.wordlist.WordListCategory.*
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
 import javafx.application.Platform
 import javafx.beans.binding.Bindings
+import javafx.collections.FXCollections
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Orientation
@@ -15,6 +15,7 @@ import javafx.scene.control.*
 import javafx.scene.layout.Background
 import javafx.scene.layout.HBox
 import javafx.scene.layout.StackPane
+import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.text.TextAlignment
 import javafx.stage.Modality
@@ -24,6 +25,7 @@ import kotlin.collections.HashMap
 import javafx.scene.text.Font
 import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
+import org.stan.experiment.ExperimentParticipant.Companion.Education.*
 import org.stan.wordlist.WordList
 import org.stan.wordlist.WordListCategory
 import org.stan.wordlist.WordListScore
@@ -57,7 +59,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
     private val timeLine = Timeline()
     private val wordLabel = Label()
     private val experimentDetails = TextFlow()
-
+    private val participantDetails = TextFlow()
     /**
      * Create a [Scene] containing the visual and interactive components of this [Experiment].
      */
@@ -69,7 +71,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
     }
 
     init {
-
+        wordLabel.styleClass.add("normal")
         /*
          * Fill the answers and score map with a default value.
          */
@@ -82,7 +84,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         /*
          * Set the properties of the visual and interactive components of the scene.
          */
-        val participantDetails = createParticipantDetails()
+        updateParticipantDetails()
         updateExperimentInformation()
         wordLabel.textAlignment = TextAlignment.CENTER
         wordLabel.isVisible = false
@@ -132,6 +134,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
 
         // Define the duration of the timeline (the amount of frames, one frame has a duration of one second.
         timeLine.cycleCount = wordListCopy.size + 1
+
         /*
          * Define the KeyFrame:
          * - displays all words in the current list
@@ -163,7 +166,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                             val answer = textInputDialog.showAndWait()
 
                             answer.ifPresent { input ->
-                                
+
                                 val split = input.split(",")
 
                                 for (word in split)
@@ -187,7 +190,8 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                                 val popupLayout = testResult.createVBox(currentScore)
                                 val popupButton = if (failedCurrentList || completedAllListsInCategory)
                                     Button("Submit category score")
-                                else Button("Show next list")
+                                else
+                                    Button("Show next list")
 
                                 popupButton.setOnAction {
 
@@ -197,7 +201,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
 
                                         completedCategories++
 
-                                        if(completedCategories == values().size){
+                                        if(completedCategories == WordListCategory.values().size){
                                             completeExperiment()
                                             return@setOnAction
                                         }
@@ -207,6 +211,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
 
                                         updateWordLabel()
                                         updateExperimentInformation()
+                                        updateParticipantDetails()
 
                                         startButton.isVisible = true
                                         leftSplitPlane.isVisible = true
@@ -274,39 +279,71 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                     "After all words have been displayed, a text area will popup in which you may enter the words you can recall.\n" +
                     "To pass the test, the words must also be answered in the same order as they were displayed.\n\n" +
                     "First you will do a test round to get familiar with the mechanics."
-        } else {
-            textBody.text =
-                    "You have completed the first category test, press start again to start with the second category!\n\n"
-                    "When you press start, each word in the list is displayed with an interval of 1 second.\n" +
-                    "After all words have been displayed, a text area will popup in which you may enter the words you can recall.\n" +
-                    "To pass the test, the words must also be answered in the same order as they were displayed.\n\n" +
-                    "First you will do a test round to get familiar with the mechanics."
-        }
+        } else
+            textBody.text = "You have completed the first category test, press start again to start with the second category!\n\n"
+
         experimentDetails.children.clear()
         experimentDetails.children.addAll(textHeader, textCategory, actualCategory, textBody)
     }
 
-    private fun createParticipantDetails() : TextFlow {
-        val textFlow = TextFlow()
+    private fun updateParticipantDetails()  {
+
+        participantDetails.children.clear()
 
         val textHeader = Text("Participant details: \n\n")
         textHeader.font = Font.font ("Verdana", 30.0)
         textHeader.fill = Color.WHITE
 
-        val textDetails = Text(
+        participantDetails.children.add(textHeader)
+
+        if(completedCategories == 0) {
+
+            val hBox = VBox(10.0)
+            val nameField = TextField()
+            nameField.promptText = "Enter your name"
+            nameField.textProperty().addListener {_, _, newValue ->
+                run {
+                    if (newValue != null)
+                        participant.name = newValue
+                }
+            }
+            val ageField = TextField()
+            ageField.promptText = "Enter your age"
+            ageField.textProperty().addListener {_, _, newValue ->
+                run {
+                    val entered = newValue.toIntOrNull()
+                    if (entered != null)
+                        participant.age = entered
+
+                }
+            }
+            val options = arrayOf(UNIVERSITY.formattedName(), UNIVERSITY_OF_APPLIED_SCIENCES.formattedName())
+            val choiceBox = ChoiceBox<String>(FXCollections.observableArrayList(*options))
+            choiceBox.prefHeight = 15.0
+            choiceBox.value = options[0]
+            choiceBox.tooltip = Tooltip()
+            choiceBox.tooltip.text = "Select your education"
+            choiceBox.selectionModel.selectedItemProperty()
+                .addListener { _, _, newValue ->  participant.education = ExperimentParticipant.Companion.Education.valueOf(newValue.replace(" ", "_").toUpperCase()) }
+
+            hBox.children.addAll(nameField, ageField, choiceBox)
+            participantDetails.children.add(hBox)
+        } else {
+            val textDetails = Text(
                 "Name: ${participant.name}\n"
-                    + "Age: ${participant.age}\n"
-                    + "Education: ${participant.education.formattedName()}")
-        textDetails.font = Font.font ("Verdana", 15.0)
-        textDetails.fill = Color.WHITE
-        textFlow.children.addAll(textHeader, textDetails)
-        return textFlow
+                        + "Age: ${participant.age}\n"
+                        + "Education: ${participant.education.formattedName()}")
+            textDetails.font = Font.font ("Verdana", 15.0)
+            textDetails.fill = Color.WHITE
+            participantDetails.children.add(textDetails)
+        }
     }
 
     private fun createPopUpWindow() : Stage{
         val popupWindow = Stage()
         popupWindow.initModality(Modality.APPLICATION_MODAL)
-        popupWindow.title = "Prompt"
+        popupWindow.title = "Answer prompt"
+        popupWindow.maxHeight = 150.0
         return popupWindow
     }
     private fun createRightSplitPlane() : SplitPane {

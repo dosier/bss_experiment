@@ -50,9 +50,9 @@ class WordListScore(listIndex : Int, answers : WordList, wordList: WordList) {
             Label("Your current score for this category is $score")
 
         val layout = VBox(10.0)
-        layout.padding = Insets(15.0, 12.0, 0.0, 12.0)
+        layout.padding = Insets(15.0, 12.0, 20.0, 12.0)
         layout.alignment = Pos.TOP_CENTER
-        layout.prefHeight = 300.0
+        layout.prefHeight = 200.0
         layout.children.addAll(header, resultLabel)
 
         return layout

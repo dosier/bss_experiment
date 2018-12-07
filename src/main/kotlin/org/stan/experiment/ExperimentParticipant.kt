@@ -15,7 +15,7 @@ import org.stan.wordlist.WordListScore
  * @since   2018-12-03
  * @version 1.0
  */
-class ExperimentParticipant(val name : String, val age : Int, val education: Education) {
+class ExperimentParticipant(var name : String, var age : Int, var education: Education) {
 
     val scores = HashMap<WordListCategory, WordListScore>()
 
