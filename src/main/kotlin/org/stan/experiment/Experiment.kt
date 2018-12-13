@@ -41,7 +41,7 @@ import org.stan.wordlist.WordListScore
  * @since   2018-11-29
  * @version 1.0
  */
-class Experiment(startCategory: WordListCategory, private val participant: ExperimentParticipant, private val wordLists: HashMap<WordListCategory, Array<WordList>>)  {
+class Experiment(startCategory: WordListCategory, private val configuration: ExperimentConfiguration, private val participant: ExperimentParticipant, private val wordLists: HashMap<WordListCategory, Array<WordList>>)  {
 
     private var completedCategories = 0
 
@@ -262,6 +262,8 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         wordLabel.textFill = Color.BLACK
 
         ExperimentResult(participant, wordLists, score, answers).save()
+
+        configuration.save()
     }
 
     private fun updateWordLabel(){
@@ -286,18 +288,16 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         val textBody = Text()
         textBody.font = Font.font ("Verdana", 15.0)
         textBody.fill = Color.WHITE
-        if(completedCategories == 0) {
-            textBody.text =
+        when (completedCategories) {
+            0 -> textBody.text =
                     "When you press start, each word in the list is displayed with an interval of 1 second.\n" +
                     "After all words have been displayed, a window will popup in which you may enter the words you can recall.\n" +
                     "Each word consists of five letters, each of your answers may contain one wrong letter.\n"+
                     "To pass the test, the words must also be answered in the same order as they were displayed.\n\n" +
                     "First you will do a test round to get familiar with the mechanics."
-        } else if(completedCategories == 1) {
-            textBody.text = "You have completed the test round.\n" +
+            1 -> textBody.text = "You have completed the test round.\n" +
                     "If you're ready, press start to begin with the first out of two categories\n"
-        } else {
-            textBody.text = "You have completed the first category.\n" +
+            else -> textBody.text = "You have completed the first category.\n" +
                     "If you're ready, press start to begin with the final category\n"
         }
         experimentDetails.children.clear()

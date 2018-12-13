@@ -46,7 +46,7 @@ class ExperimentGroup(private val identifier : String, private val maxCapacity :
     }
 
     override fun toString(): String {
-        return "org.stan.experiment.ExperimentGroup(firstListCategory=$firstListCategory)"
+        return "ExperimentGroup(firstListCategory=$firstListCategory)"
     }
 
     companion object {

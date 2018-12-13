@@ -80,17 +80,17 @@ class ExperimentConfiguration {
         selectedGroup.add(participant)
 
         println("Added participant to $selectedGroup")
-        save()
 
         val session = Experiment(
             selectedGroup.firstListCategory,
+            this,
             participant,
             allWordLists
         )
         return Optional.of(session)
     }
 
-    private fun save() {
+    fun save() {
         val groupADataFile = savePath.resolve(GROUP_A).toFile()
         val groupBDataFile = savePath.resolve(GROUP_B).toFile()
 
