@@ -64,8 +64,8 @@ class ExperimentConfiguration {
 //        val name = promptForName()
 //        val age = promptForAge()
 //        val education = promptForEducation()
-        val name = "Stan"
-        val age = 20
+        val name = ""
+        val age = -1
         val education = Education.UNIVERSITY
 
         val participant = ExperimentParticipant(name, age, education)

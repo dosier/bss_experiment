@@ -6,6 +6,7 @@ import javafx.scene.layout.GridPane
 import javafx.scene.text.Font
 import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
+import org.util.TextUtil
 
 /**
  * A [WordListScore] handles the user input, it counts the mistakes and offers functionality to display the result.
@@ -32,17 +33,24 @@ class WordListScore(listIndex : Int, answers : WordList, wordList: WordList) {
         println()
 
         for ((index, word) in answers.withIndex()){
-            val wordIsValid = wordList.contains(word)
-            val wordIsInOrder = wordList[index] == word
 
-            if(wordIsValid && wordIsInOrder)
+            val expectedWord = wordList[index]
+            val correctAnswer = expectedWord == word
+
+            if(correctAnswer) {
                 wrongAnswerCount--
+            } else {
+                val distance = TextUtil.calculateLevensteinDistance(expectedWord, word)
+                println("($expectedWord, $word) -> Distance = $distance [Threshold pass distance = $LEVENSHTEIN_THRESHOLD]")
 
+                if(distance <= LEVENSHTEIN_THRESHOLD)
+                    wrongAnswerCount--
+            }
         }
         mistakes = wrongAnswerCount
         score = listIndex + if(mistakes > 0) 0 else 1
-        resultText = Text("Results: ${numberOfWordsTested-mistakes}/$numberOfWordsTested correct")
-        resultText.font = Font.font(13.0)
+        resultText = Text("\nResults: ${numberOfWordsTested-mistakes}/$numberOfWordsTested correct")
+        resultText.font = Font.font(15.0)
     }
 
     fun createGrid(score : Int) : GridPane {
@@ -51,6 +59,7 @@ class WordListScore(listIndex : Int, answers : WordList, wordList: WordList) {
 
         grid.alignment = Pos.CENTER
         grid.hgap = 15.0
+        grid.vgap = 10.0
 
         val textFlow = TextFlow()
         textFlow.style = "-fx-border-style: solid; -fx-background-color: white;"
@@ -59,7 +68,7 @@ class WordListScore(listIndex : Int, answers : WordList, wordList: WordList) {
         val headerText = if(mistakes > 0)
             Text("Your end score for this category is $score")
         else Text("Your current score for this category is $score")
-        headerText.font = Font.font(15.0)
+        headerText.font = Font.font(17.0)
 
         textFlow.children.addAll(headerText, resultText)
 
@@ -67,4 +76,7 @@ class WordListScore(listIndex : Int, answers : WordList, wordList: WordList) {
         return grid
     }
 
+    companion object {
+        const val LEVENSHTEIN_THRESHOLD = 1
+    }
 }

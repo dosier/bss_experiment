@@ -22,13 +22,13 @@ public class ExperimentScreen extends Application {
         final ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration();
 
         experimentConfiguration.buildSession().ifPresent(experimentSession -> {
-
             final Scene scene = experimentSession.buildScene();
 
             scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 
             primaryStage.setTitle("BSS Experiment");
             primaryStage.setScene(scene);
+            primaryStage.setFullScreen(true);
             primaryStage.show();
         });
     }

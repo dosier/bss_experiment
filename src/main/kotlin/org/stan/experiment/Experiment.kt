@@ -57,6 +57,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
     private val wordLabel = Label()
     private val experimentDetails = TextFlow()
     private val participantDetails = TextFlow()
+    private val startButton = Button("Start")
     /**
      * Create a [Scene] containing the visual and interactive components of this [Experiment].
      */
@@ -68,6 +69,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
     }
 
     init {
+
         wordLabel.styleClass.add("normal")
         /*
          * Fill the answers and score map with a default value.
@@ -92,8 +94,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         val leftSplitPlane = createLeftSplitPane(upperPane, lowerPane)
         val splitPane = createRightSplitPlane()
 
-        // Create a start button that triggers the timeline
-        val startButton = Button("Start")
+        startButton.disableProperty().set(true)
         startButton.setOnAction {
             startButton.isVisible = false
             leftSplitPlane.isVisible = false
@@ -102,7 +103,6 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
             timeLine.cycleCount = wordLists[currentCategory]!![currentListIndex].size + 1
             timeLine.play()
         }
-
 
         // Create a right aligned pane that contains the start button
         val rightHBox = createRightHBox()
@@ -140,7 +140,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
          * - verifies the answer and measures the result
          * - executes the appropriate behaviour to the measured result
          */
-        timeLine.keyFrames.add(
+        timeLine.keyFrames.addAll(
             KeyFrame(
                 Duration.seconds(DISPLAY_INTERVAL_IN_SECONDS),
                 EventHandler {
@@ -231,9 +231,19 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                                     POPUP_HEIGHT
                                 )
                                 popupWindow.scene = popupScene
+                                popupWindow.isResizable = false
+                                popupWindow.isFullScreen = false
+                                popupWindow.isMaximized = false
+                                popupWindow.isAlwaysOnTop = true
+                                popupWindow.initOwner(root.scene.window)
                                 popupWindow.showAndWait()
                             }
                         }
+                        answerDialog.isResizable = false
+                        answerDialog.isFullScreen = false
+                        answerDialog.isMaximized = false
+                        answerDialog.isAlwaysOnTop = true
+                        answerDialog.initOwner(root.scene.window)
                         answerDialog.show()
                     }
                 })
@@ -273,7 +283,8 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         if(completedCategories == 0) {
             textBody.text =
                     "When you press start, each word in the list is displayed with an interval of 1 second.\n" +
-                    "After all words have been displayed, a text area will popup in which you may enter the words you can recall.\n" +
+                    "After all words have been displayed, a window will popup in which you may enter the words you can recall.\n" +
+                    "Each word consists of five letters, each of your answers may contain one wrong letter.\n"+
                     "To pass the test, the words must also be answered in the same order as they were displayed.\n\n" +
                     "First you will do a test round to get familiar with the mechanics."
         } else
@@ -302,6 +313,8 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                 run {
                     if (newValue != null)
                         participant.name = newValue
+
+                    startButton.disableProperty().set(participant.name.isBlank().or(participant.age == -1))
                 }
             }
             val ageField = TextField()
@@ -311,7 +324,9 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                     val entered = newValue.toIntOrNull()
                     if (entered != null)
                         participant.age = entered
-
+                    else
+                        participant.age = -1
+                    startButton.disableProperty().set(participant.name.isBlank().or(participant.age == -1))
                 }
             }
             val options = arrayOf(UNIVERSITY.formattedName(), UNIVERSITY_OF_APPLIED_SCIENCES.formattedName())
@@ -353,65 +368,52 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
     }
     private fun createLeftSplitPane(upperPane : StackPane, lowerPane: StackPane) : SplitPane {
         val splitPlane = SplitPane()
+        val box = VBox(10.0, upperPane)
+        box.alignment = Pos.CENTER
+        val box2 = VBox(10.0, lowerPane)
+        box2.padding = Insets(60.0, 0.0,60.0,0.0)
+        box2.alignment = Pos.TOP_CENTER
 
         splitPlane.background = Background.EMPTY
         splitPlane.orientation = Orientation.VERTICAL
-        splitPlane.items.addAll(upperPane, lowerPane)
-        splitPlane.setDividerPositions(0.6)
+        splitPlane.items.addAll(box, box2)
+        splitPlane.setDividerPositions(0.5)
 
         //Constrain max size of left component:
-        upperPane.maxHeightProperty().bind(splitPlane.heightProperty().multiply(0.6))
-        lowerPane.maxHeightProperty().bind(splitPlane.heightProperty().multiply(0.4))
+        upperPane.maxHeightProperty().bind(root.heightProperty().multiply(0.5))
+        lowerPane.maxHeightProperty().bind(root.heightProperty().multiply(0.5))
         splitPlane.maxWidthProperty().bind(root.widthProperty().multiply(0.5))
         return splitPlane
     }
 
     private fun createStackPane(node : Node) : StackPane{
-        val stackPane = StackPane(node)
+        val box = HBox(10.0, node)
+        box.alignment = Pos.CENTER
+        val stackPane = StackPane(box)
+
         stackPane.background = Background.EMPTY
-        stackPane.alignment = Pos.CENTER_LEFT
-        stackPane.maxHeight = 500.0
-        stackPane.maxWidth = 500.0
-        stackPane.padding = Insets(15.0, 12.0, 0.0, 12.0)
+        stackPane.alignment = Pos.CENTER
+        stackPane.padding = Insets(15.0, 12.0, 15.0, 12.0)
         return stackPane
     }
 
     private fun createRightHBox() : HBox {
         val hBox = HBox()
         hBox.alignment = Pos.CENTER
-        hBox.maxHeight = 500.0
-        hBox.maxWidth = 500.0
         hBox.padding = Insets(15.0, 12.0, 0.0, 12.0)
         hBox.spacing = 10.0
         return hBox
-    }
-    private fun createTextInputDialog() : TextInputDialog {
-        val textInputDialog = TextInputDialog()
-        textInputDialog.title = ANSWER_DIALOG_TITLE
-        textInputDialog.headerText = "Please enter all the words you are able to recall, separated by a comma!"
-        textInputDialog.contentText = "Answer:"
-        textInputDialog.dialogPane.lookupButton(ButtonType.CANCEL).isVisible = false
-        textInputDialog.dialogPane.lookupButton(ButtonType.OK).disableProperty().bind(
-            Bindings.createBooleanBinding(Callable {
-                textInputDialog.editor.text.trim().isEmpty()
-            }, textInputDialog.editor.textProperty()))
-
-
-        textInputDialog.editor.prefHeight(200.0)
-        return textInputDialog
     }
 
     companion object {
 
         const val SCREEN_WIDTH  = 1000.0
-        const val SCREEN_HEIGHT = 600.0
+        const val SCREEN_HEIGHT = 720.0
 
         const val POPUP_WIDTH = 350.0
         const val POPUP_HEIGHT = 250.0
 
         const val DISPLAY_INTERVAL_IN_SECONDS = 1.0
-
-        const val ANSWER_DIALOG_TITLE = "Answer Dialog"
 
     }
 }

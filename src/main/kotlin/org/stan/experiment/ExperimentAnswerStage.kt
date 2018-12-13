@@ -99,6 +99,7 @@ abstract class ExperimentAnswerStage(private val inputFieldCount : Int, private 
             addRow()
 
         scene = Scene(layout)
+        isFullScreen = false
     }
 
     private fun reset(){
