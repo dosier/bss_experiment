@@ -12,8 +12,6 @@ import java.io.FileWriter
 import java.lang.Exception
 import java.nio.file.Paths
 import java.util.*
-import java.util.stream.IntStream
-import java.util.stream.Stream
 import kotlin.collections.ArrayList
 
 /**
@@ -196,6 +194,7 @@ class ExperimentConfiguration {
         val savePath = Paths.get("data", "participants")!!
 
         val allWordLists = hashMapOf(
+            Pair(WordListCategory.TEST_CATEGORY, WordList.TEST_LISTS),
             Pair(WordListCategory.EASY_TO_READ_WORDS, buildLists()),
             Pair(WordListCategory.HARD_TO_READ_WORDS, buildLists())
         )

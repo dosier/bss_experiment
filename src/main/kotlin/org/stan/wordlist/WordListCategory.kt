@@ -15,10 +15,11 @@ import javafx.scene.text.Font
  */
 enum class WordListCategory(val font : Font, val color : Color) {
 
+    TEST_CATEGORY(Font.font("Arial", 30.0), Color.BLACK),
     EASY_TO_READ_WORDS(Font.font("Arial", 30.0), Color.BLACK),
     HARD_TO_READ_WORDS(Font.font("Monotype Corsiva", 30.0), Color.BLACK);
 
-    fun other() : WordListCategory {
+    fun next() : WordListCategory {
         return if(this == EASY_TO_READ_WORDS)
             HARD_TO_READ_WORDS
         else EASY_TO_READ_WORDS

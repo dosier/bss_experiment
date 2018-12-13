@@ -27,14 +27,9 @@ class WordList(vararg words: String) : LinkedList<String>() {
 
     companion object {
 
-        val EASY_LISTS = arrayOf(
+        val TEST_LISTS = arrayOf(
             WordList("test1", "test2", "test3"),
-            WordList("boo1", "boo2", "boo3")
-        )
-
-        val HARD_LISTS = arrayOf(
-            WordList("foo1", "foo2", "foo3"),
-            WordList("apple1", "apple2", "apple3")
+            WordList("boot1", "boot2", "boot3", "boot4")
         )
 
     }

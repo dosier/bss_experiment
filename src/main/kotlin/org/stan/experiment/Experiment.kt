@@ -2,7 +2,6 @@ package org.stan.experiment
 
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
-import javafx.beans.binding.Bindings
 import javafx.collections.FXCollections
 import javafx.event.EventHandler
 import javafx.geometry.HPos
@@ -25,8 +24,8 @@ import javafx.scene.text.TextFlow
 import org.stan.experiment.ExperimentParticipant.Companion.Education.*
 import org.stan.wordlist.WordList
 import org.stan.wordlist.WordListCategory
+import org.stan.wordlist.WordListCategory.TEST_CATEGORY
 import org.stan.wordlist.WordListScore
-import java.util.concurrent.Callable
 
 
 /**
@@ -35,7 +34,7 @@ import java.util.concurrent.Callable
  * @param startCategory the initial [WordListCategory] from which lists are retrieved.
  * @param wordLists     a [HashMap] containing every [WordList] for both [WordListCategory].
  *
- * @see WordListCategory.EASY_TO_READ_WORDS -> [WordList.EASY_LISTS]
+ * @see WordListCategory.EASY_TO_READ_WORDS -> [WordList.TEST_LISTS]
  * @see WordListCategory.HARD_TO_READ_WORDS -> [WordList.HARD_LISTS]
  *
  * @author  Stan van der Bend
@@ -46,7 +45,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
 
     private var completedCategories = 0
 
-    private var currentCategory = startCategory
+    private var currentCategory = TEST_CATEGORY
     private var currentListIndex = 0
 
     private val answers = HashMap<WordListCategory, Array<WordList>>()
@@ -74,9 +73,12 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
         /*
          * Fill the answers and score map with a default value.
          */
-        val nextCategory = startCategory.other() // this is to maintain the order in the JSON file
+        val nextCategory = startCategory.next() // this is to maintain the order in the JSON file
+
+        answers[TEST_CATEGORY] = Array(wordLists[TEST_CATEGORY]!!.size) { WordList() }
         answers[startCategory] = Array(wordLists[startCategory]!!.size) { WordList() }
         answers[nextCategory] = Array(wordLists[nextCategory]!!.size) { WordList() }
+        score[TEST_CATEGORY] = 0
         score[startCategory] = 0
         score[nextCategory] = 0
 
@@ -184,7 +186,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                                 val popupWindow = createPopUpWindow()
                                 val popupLayout = testResult.createGrid(currentScore)
                                 val popupButton = if (failedCurrentList || completedAllListsInCategory)
-                                    Button("Submit category score")
+                                    Button(if(currentCategory == TEST_CATEGORY) "Complete test" else "Submit category score")
                                 else
                                     Button("Show next list")
 
@@ -201,7 +203,11 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                                             return@setOnAction
                                         }
 
-                                        currentCategory = currentCategory.other()
+                                        currentCategory = if(currentCategory == TEST_CATEGORY)
+                                            startCategory
+                                        else
+                                            currentCategory.next()
+
                                         currentListIndex = 0
 
                                         updateWordLabel()
