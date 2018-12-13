@@ -31,10 +31,11 @@ object WordScanner {
         val start = System.currentTimeMillis()
 
         // we filter words only within the bounded frequency, of the specified length and no duplicate lemma's
-        val results = readWordFrequencyWebsite().filter {
-            it.frequency in MINIMUM_FREQUENCY..MAXIMUM_FREQUENCY
-                    && it.word.length == WORD_LENGTH
-        }
+        val results = readWordFrequencyWebsite()
+            .filter { it.frequency in MINIMUM_FREQUENCY..MAXIMUM_FREQUENCY && it.word.length == WORD_LENGTH }
+            .toMutableList()
+
+        results.sortByDescending { it.frequency }
 
         val end = System.currentTimeMillis()
         val duration = end - start
@@ -53,10 +54,26 @@ object WordScanner {
 
         val serialized = JsonObject()
         val serializedWords = JsonArray()
-        results.forEach { serializedWords.add(it.serialize()) }
+
+        val subList = results.subList(0,75)
+
+        while (subList.isNotEmpty()){
+            val word = subList.random()
+            subList.remove(word)
+            serializedWords.add(word.serialize())
+        }
+
+        results.removeAll(subList)
+
+        while (results.isNotEmpty()){
+            val word = results.random()
+            results.remove(word)
+            serializedWords.add(word.serialize())
+        }
+
         serialized.add("words", serializedWords)
 
-        val out = Paths.get("data", "other_used_words.json").toFile()
+        val out = Paths.get("data", "words.json").toFile()
         out.createNewFile()
 
         val fileWriter = FileWriter(out)

@@ -24,6 +24,7 @@ import javafx.scene.text.TextFlow
 import org.stan.experiment.ExperimentParticipant.Companion.Education.*
 import org.stan.wordlist.WordList
 import org.stan.wordlist.WordListCategory
+import org.stan.wordlist.WordListCategory.HARD_TO_READ_WORDS
 import org.stan.wordlist.WordListCategory.TEST_CATEGORY
 import org.stan.wordlist.WordListScore
 
@@ -34,8 +35,7 @@ import org.stan.wordlist.WordListScore
  * @param startCategory the initial [WordListCategory] from which lists are retrieved.
  * @param wordLists     a [HashMap] containing every [WordList] for both [WordListCategory].
  *
- * @see WordListCategory.EASY_TO_READ_WORDS -> [WordList.TEST_LISTS]
- * @see WordListCategory.HARD_TO_READ_WORDS -> [WordList.HARD_LISTS]
+ * @see WordListCategory.TEST_CATEGORY -> [WordList.TEST_LISTS]
  *
  * @author  Stan van der Bend
  * @since   2018-11-29
@@ -293,9 +293,13 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                     "Each word consists of five letters, each of your answers may contain one wrong letter.\n"+
                     "To pass the test, the words must also be answered in the same order as they were displayed.\n\n" +
                     "First you will do a test round to get familiar with the mechanics."
-        } else
-            textBody.text = "You have completed the first category test, press start again to start with the second category!\n\n"
-
+        } else if(completedCategories == 1) {
+            textBody.text = "You have completed the test round.\n" +
+                    "If you're ready, press start to begin with the first out of two categories\n"
+        } else {
+            textBody.text = "You have completed the first category.\n" +
+                    "If you're ready, press start to begin with the final category\n"
+        }
         experimentDetails.children.clear()
         experimentDetails.children.addAll(textHeader, textCategory, actualCategory, textBody)
     }

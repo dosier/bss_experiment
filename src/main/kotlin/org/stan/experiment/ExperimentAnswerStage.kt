@@ -122,8 +122,8 @@ abstract class ExperimentAnswerStage(private val inputFieldCount : Int, private 
         textHeader.fill = Color.BLACK
 
         val textDescription = Text(
-            "You can press the '+' button to add another field. \n" +
-                 "Leaving fields empty will not affect your final answer.")
+            (if(isDynamic) "You can press the '+' button to add another field. \nLeaving fields empty will not affect your final answer.\n" else "")
+                    + "The words must be entered in the same order as they were displayed.\n")
         textDescription.font = Font.font ("Verdana", 13.0)
         textDescription.fill = Color.BLACK
 

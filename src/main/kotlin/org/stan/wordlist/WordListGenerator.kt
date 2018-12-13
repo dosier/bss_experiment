@@ -23,11 +23,9 @@ class WordListGenerator( private val amount: Int) {
             return wordList
         }
 
-        for (i in 0 until amount) {
-            val word = availableWords.random()
-            wordList.add(word)
-            availableWords.remove(word)
-        }
+        for (i in 0 until amount)
+            wordList.add(availableWords.remove())
+
         return wordList
     }
 
