@@ -1,9 +1,11 @@
 package org.stan.wordlist
 
 import com.eclipsesource.json.Json
+import com.sun.xml.internal.fastinfoset.util.StringArray
 import java.io.FileReader
 import java.nio.file.Paths
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * TODO: add documentation
@@ -12,11 +14,13 @@ import java.util.*
  * @since   2018-12-03
  * @version 1.0
  */
-class WordListGenerator( private val amount: Int) {
+class WordListGenerator(private val category: WordListCategory, private val amount: Int) {
 
     fun generate() : WordList {
 
         val wordList = WordList()
+
+        val availableWords = availableWordsPerCategory[category]!!
 
         if(availableWords.size < amount){
             println("Not enough words left!!!")
@@ -31,14 +35,28 @@ class WordListGenerator( private val amount: Int) {
 
     companion object {
 
-        var availableWords = load()
+        var availableWordsPerCategory = load()
 
-        fun load() : WordList{
+        fun load() : HashMap<WordListCategory, WordList>{
             val jsonObject = Json.parse(FileReader(Paths.get("data", "words.json").toFile())).asObject()
             val jsonArray = jsonObject.get("words").asArray()
             val words = jsonArray.map { Word.deserialize(it.asObject()) }.map { it.word }.toTypedArray()
 
-            return WordList(*words)
+            val wordListOne = WordList()
+            val wordListTwo = WordList()
+
+            val iterator = words.iterator()
+            while (iterator.hasNext()){
+                wordListOne.add(iterator.next())
+                if(iterator.hasNext())
+                    wordListTwo.add(iterator.next())
+            }
+
+            val map = HashMap<WordListCategory, WordList>()
+            map[WordListCategory.EASY_TO_READ_WORDS] = wordListOne
+            map[WordListCategory.HARD_TO_READ_WORDS] = wordListTwo
+
+            return map
         }
     }
 }

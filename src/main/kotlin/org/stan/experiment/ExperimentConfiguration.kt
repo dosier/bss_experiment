@@ -5,6 +5,7 @@ import com.eclipsesource.json.Json
 import com.eclipsesource.json.WriterConfig
 import org.stan.wordlist.WordList
 import org.stan.wordlist.WordListCategory
+import org.stan.wordlist.WordListCategory.*
 import org.stan.wordlist.WordListGenerator
 import org.util.TextUtil
 import java.io.FileReader
@@ -42,7 +43,7 @@ class ExperimentConfiguration {
             ExperimentGroup(
                 GROUP_A,
                 GROUP_SIZE,
-                WordListCategory.EASY_TO_READ_WORDS
+                EASY_TO_READ_WORDS
             )
         else
             ExperimentGroup.deserialize(Json.parse(FileReader(groupADataFile)).asObject())
@@ -51,7 +52,7 @@ class ExperimentConfiguration {
             ExperimentGroup(
                 GROUP_B,
                 GROUP_SIZE,
-                WordListCategory.HARD_TO_READ_WORDS
+                HARD_TO_READ_WORDS
             )
         else
             ExperimentGroup.deserialize(Json.parse(FileReader(groupBDataFile)).asObject())
@@ -194,16 +195,16 @@ class ExperimentConfiguration {
         val savePath = Paths.get("data", "participants")!!
 
         val allWordLists = hashMapOf(
-            Pair(WordListCategory.TEST_CATEGORY, WordList.TEST_LISTS),
-            Pair(WordListCategory.EASY_TO_READ_WORDS, buildLists()),
-            Pair(WordListCategory.HARD_TO_READ_WORDS, buildLists())
+            Pair(TEST_CATEGORY, WordList.TEST_LISTS),
+            Pair(EASY_TO_READ_WORDS, buildLists(EASY_TO_READ_WORDS)),
+            Pair(HARD_TO_READ_WORDS, buildLists(HARD_TO_READ_WORDS))
         )
 
-        private fun buildLists() : Array<WordList>{
+        private fun buildLists(category: WordListCategory) : Array<WordList>{
             val list = ArrayList<WordList>()
 
             for (i in 0 until LISTS_PER_CATEGORY)
-                list.add(WordListGenerator(INITIAL_WORDS_IN_LIST + i).generate())
+                list.add(WordListGenerator(category, INITIAL_WORDS_IN_LIST + i).generate())
 
             return list.toTypedArray()
         }

@@ -2,6 +2,7 @@ package org.stan.experiment
 
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
+import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.event.EventHandler
 import javafx.geometry.HPos
@@ -24,7 +25,6 @@ import javafx.scene.text.TextFlow
 import org.stan.experiment.ExperimentParticipant.Companion.Education.*
 import org.stan.wordlist.WordList
 import org.stan.wordlist.WordListCategory
-import org.stan.wordlist.WordListCategory.HARD_TO_READ_WORDS
 import org.stan.wordlist.WordListCategory.TEST_CATEGORY
 import org.stan.wordlist.WordListScore
 
@@ -41,7 +41,7 @@ import org.stan.wordlist.WordListScore
  * @since   2018-11-29
  * @version 1.0
  */
-class Experiment(startCategory: WordListCategory, private val configuration: ExperimentConfiguration, private val participant: ExperimentParticipant, private val wordLists: HashMap<WordListCategory, Array<WordList>>)  {
+class Experiment(private val startCategory: WordListCategory, private val configuration: ExperimentConfiguration, private val participant: ExperimentParticipant, private val wordLists: HashMap<WordListCategory, Array<WordList>>)  {
 
     private var completedCategories = 0
 
@@ -57,6 +57,9 @@ class Experiment(startCategory: WordListCategory, private val configuration: Exp
     private val experimentDetails = TextFlow()
     private val participantDetails = TextFlow()
     private val startButton = Button("Start")
+    private val leftSplitPlane : SplitPane
+    private val splitPane : SplitPane
+
     /**
      * Create a [Scene] containing the visual and interactive components of this [Experiment].
      */
@@ -70,6 +73,8 @@ class Experiment(startCategory: WordListCategory, private val configuration: Exp
     init {
 
         wordLabel.styleClass.add("normal")
+        root.styleClass.add("primaryStage")
+
         /*
          * Fill the answers and score map with a default value.
          */
@@ -93,8 +98,8 @@ class Experiment(startCategory: WordListCategory, private val configuration: Exp
 
         val upperPane = createStackPane(experimentDetails)
         val lowerPane = createStackPane(participantDetails)
-        val leftSplitPlane = createLeftSplitPane(upperPane, lowerPane)
-        val splitPane = createRightSplitPlane()
+        leftSplitPlane = createLeftSplitPane(upperPane, lowerPane)
+        splitPane = createRightSplitPlane()
 
         startButton.disableProperty().set(true)
         startButton.setOnAction {
@@ -159,7 +164,7 @@ class Experiment(startCategory: WordListCategory, private val configuration: Exp
                         val currentCategoryLists =  wordLists[currentCategory]!!
                         val wordList = currentCategoryLists[currentListIndex]
 
-                        val answerDialog = object : ExperimentAnswerStage(currentListIndex + ExperimentConfiguration.INITIAL_WORDS_IN_LIST) {
+                        val answerDialog = object : ExperimentAnswerStage(root.scene,currentListIndex + ExperimentConfiguration.INITIAL_WORDS_IN_LIST) {
 
                             override fun onSubmit(answers: Array<String>) {
 
@@ -167,7 +172,6 @@ class Experiment(startCategory: WordListCategory, private val configuration: Exp
 
                                 for (word in answers)
                                     currentListAnswers.add(word)
-
 
                                 val testResult =
                                     WordListScore(
@@ -180,6 +184,25 @@ class Experiment(startCategory: WordListCategory, private val configuration: Exp
 
                                 participant.scores[currentCategory] = testResult
                                 score[currentCategory] = currentScore
+
+                                if(failedCurrentList && currentCategory == TEST_CATEGORY){
+                                    Platform.runLater {
+                                        val alert = Alert(Alert.AlertType.INFORMATION)
+                                        alert.title = "Failed test"
+                                        alert.headerText = "You failed the test, please try again."
+                                        alert.contentText = "Click the OK button to try again."
+                                        alert.initOwner(root.scene.window)
+                                        alert.showAndWait().ifPresent { buttonType ->
+                                            if(buttonType == ButtonType.OK){
+                                                currentListAnswers.clear()
+                                                timeLine.playFromStart()
+                                                wordListCopy = WordList()
+                                                wordListCopy.addAll(wordLists[currentCategory]!![currentListIndex])
+                                            }
+                                        }
+                                    }
+                                    return
+                                }
 
                                 val completedAllListsInCategory = currentListIndex + 1 == currentCategoryLists.size
 
@@ -203,21 +226,38 @@ class Experiment(startCategory: WordListCategory, private val configuration: Exp
                                             return@setOnAction
                                         }
 
-                                        currentCategory = if(currentCategory == TEST_CATEGORY)
-                                            startCategory
-                                        else
-                                            currentCategory.next()
-
-                                        currentListIndex = 0
-
-                                        updateWordLabel()
-                                        updateExperimentInformation()
-                                        updateParticipantDetails()
-
-                                        startButton.isVisible = true
-                                        leftSplitPlane.isVisible = true
-                                        splitPane.isVisible = true
-                                        wordLabel.isVisible = false
+                                        if(currentCategory == TEST_CATEGORY){
+                                            Platform.runLater {
+                                                val alert = Alert(Alert.AlertType.CONFIRMATION)
+                                                alert.title = "Restart test?"
+                                                alert.headerText = "You completed the test, would you like to try again?"
+                                                alert.contentText = "Click the OK button to try again or click Finish to end the test."
+                                                alert.buttonTypes.remove(ButtonType.CANCEL)
+                                                alert.buttonTypes.add(ButtonType.FINISH)
+                                                alert.initModality(Modality.WINDOW_MODAL)
+                                                alert.initOwner(root.scene.window)
+                                                alert.showAndWait().ifPresent { buttonType ->
+                                                    if(buttonType == ButtonType.FINISH) {
+                                                        prepareNextCategory()
+                                                        wordListCopy = WordList()
+                                                        wordListCopy.addAll(wordLists[currentCategory]!![currentListIndex])
+                                                        timeLine.cycleCount = wordListCopy.size + 1
+                                                    } else if(buttonType == ButtonType.OK){
+                                                        popupWindow.close()
+                                                        currentListAnswers.clear()
+                                                        this@Experiment.answers[TEST_CATEGORY] = Array(wordLists[TEST_CATEGORY]!!.size) { WordList() }
+                                                        this@Experiment.score[TEST_CATEGORY] = 0
+                                                        completedCategories = 0
+                                                        currentListIndex = 0
+                                                        wordListCopy = WordList()
+                                                        wordListCopy.addAll(wordLists[currentCategory]!![currentListIndex])
+                                                        timeLine.cycleCount = wordListCopy.size + 1
+                                                        timeLine.playFromStart()
+                                                    }
+                                                }
+                                            }
+                                            return@setOnAction
+                                        } else prepareNextCategory()
 
                                     } else {
                                         currentListIndex++
@@ -228,8 +268,7 @@ class Experiment(startCategory: WordListCategory, private val configuration: Exp
                                     wordListCopy = WordList()
                                     wordListCopy.addAll(wordLists[currentCategory]!![currentListIndex])
                                 }
-
-                                popupLayout.addRow(1, popupButton)
+                                popupLayout.add(popupButton, 0,1)
                                 GridPane.setHalignment(popupButton, HPos.CENTER)
 
                                 val popupScene = Scene(popupLayout,
@@ -243,6 +282,7 @@ class Experiment(startCategory: WordListCategory, private val configuration: Exp
                                 popupWindow.isAlwaysOnTop = true
                                 popupWindow.initOwner(root.scene.window)
                                 popupWindow.showAndWait()
+
                             }
                         }
                         answerDialog.isResizable = false
@@ -254,6 +294,25 @@ class Experiment(startCategory: WordListCategory, private val configuration: Exp
                     }
                 })
         )
+    }
+
+    private fun prepareNextCategory(){
+
+        currentCategory = if(currentCategory == TEST_CATEGORY)
+            startCategory
+        else
+            currentCategory.next()
+
+        currentListIndex = 0
+
+        updateWordLabel()
+        updateExperimentInformation()
+        updateParticipantDetails()
+
+        startButton.isVisible = true
+        leftSplitPlane.isVisible = true
+        splitPane.isVisible = true
+        wordLabel.isVisible = false
     }
     private fun completeExperiment() {
         wordLabel.text = "You completed the experiment, thank you!"

@@ -16,6 +16,7 @@ import javafx.scene.text.Font
 import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
 import javafx.stage.Stage
+import javafx.stage.Window
 
 
 /**
@@ -25,7 +26,7 @@ import javafx.stage.Stage
  * @since   2018-12-13
  * @version 1.0
  */
-abstract class ExperimentAnswerStage(private val inputFieldCount : Int, private val isDynamic : Boolean = false) : Stage() {
+abstract class ExperimentAnswerStage(parent : Scene, private val inputFieldCount : Int, private val isDynamic : Boolean = false) : Stage() {
 
     private val layout = VBox()
 
@@ -99,6 +100,8 @@ abstract class ExperimentAnswerStage(private val inputFieldCount : Int, private 
             addRow()
 
         scene = Scene(layout)
+        scene.stylesheets.clear()
+        scene.stylesheets.addAll(parent.stylesheets)
         isFullScreen = false
     }
 
