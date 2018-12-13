@@ -1,0 +1,1004 @@
+{
+  "words": [
+    {
+      "word": "years",
+      "frequency": 13145031
+    },
+    {
+      "word": "there",
+      "frequency": 23199253
+    },
+    {
+      "word": "those",
+      "frequency": 11003310
+    },
+    {
+      "word": "start",
+      "frequency": 3982889
+    },
+    {
+      "word": "three",
+      "frequency": 6999694
+    },
+    {
+      "word": "small",
+      "frequency": 5429325
+    },
+    {
+      "word": "state",
+      "frequency": 5518222
+    },
+    {
+      "word": "write",
+      "frequency": 1682897
+    },
+    {
+      "word": "after",
+      "frequency": 4593147
+    },
+    {
+      "word": "story",
+      "frequency": 3184404
+    },
+    {
+      "word": "check",
+      "frequency": 3044778
+    },
+    {
+      "word": "apply",
+      "frequency": 2118422
+    },
+    {
+      "word": "field",
+      "frequency": 2615641
+    },
+    {
+      "word": "quite",
+      "frequency": 2997650
+    },
+    {
+      "word": "place",
+      "frequency": 1279216
+    },
+    {
+      "word": "heart",
+      "frequency": 2401209
+    },
+    {
+      "word": "focus",
+      "frequency": 1090155
+    },
+    {
+      "word": "thank",
+      "frequency": 2143096
+    },
+    {
+      "word": "avoid",
+      "frequency": 1608638
+    },
+    {
+      "word": "owner",
+      "frequency": 1087352
+    },
+    {
+      "word": "stock",
+      "frequency": 1538651
+    },
+    {
+      "word": "since",
+      "frequency": 1745155
+    },
+    {
+      "word": "legal",
+      "frequency": 1589568
+    },
+    {
+      "word": "green",
+      "frequency": 1527212
+    },
+    {
+      "word": "claim",
+      "frequency": 520658
+    },
+    {
+      "word": "scene",
+      "frequency": 1039410
+    },
+    {
+      "word": "river",
+      "frequency": 1256095
+    },
+    {
+      "word": "seven",
+      "frequency": 1266388
+    },
+    {
+      "word": "brain",
+      "frequency": 1052969
+    },
+    {
+      "word": "score",
+      "frequency": 706695
+    },
+    {
+      "word": "press",
+      "frequency": 993300
+    },
+    {
+      "word": "union",
+      "frequency": 807612
+    },
+    {
+      "word": "solve",
+      "frequency": 511071
+    },
+    {
+      "word": "yards",
+      "frequency": 428203
+    },
+    {
+      "word": "total",
+      "frequency": 758731
+    },
+    {
+      "word": "sorry",
+      "frequency": 785146
+    },
+    {
+      "word": "ahead",
+      "frequency": 703112
+    },
+    {
+      "word": "bonus",
+      "frequency": 532300
+    },
+    {
+      "word": "minor",
+      "frequency": 625413
+    },
+    {
+      "word": "solar",
+      "frequency": 611748
+    },
+    {
+      "word": "steal",
+      "frequency": 180570
+    },
+    {
+      "word": "audio",
+      "frequency": 580937
+    },
+    {
+      "word": "quiet",
+      "frequency": 515688
+    },
+    {
+      "word": "bound",
+      "frequency": 314543
+    },
+    {
+      "word": "pilot",
+      "frequency": 387063
+    },
+    {
+      "word": "trade",
+      "frequency": 195799
+    },
+    {
+      "word": "dance",
+      "frequency": 476770
+    },
+    {
+      "word": "quote",
+      "frequency": 291424
+    },
+    {
+      "word": "grant",
+      "frequency": 255476
+    },
+    {
+      "word": "worth",
+      "frequency": 446354
+    },
+    {
+      "word": "fiber",
+      "frequency": 305658
+    },
+    {
+      "word": "yours",
+      "frequency": 420877
+    },
+    {
+      "word": "strip",
+      "frequency": 265624
+    },
+    {
+      "word": "shelf",
+      "frequency": 235529
+    },
+    {
+      "word": "laser",
+      "frequency": 326274
+    },
+    {
+      "word": "blame",
+      "frequency": 209594
+    },
+    {
+      "word": "logic",
+      "frequency": 343488
+    },
+    {
+      "word": "light",
+      "frequency": 178045
+    },
+    {
+      "word": "loose",
+      "frequency": 342777
+    },
+    {
+      "word": "build",
+      "frequency": 341366
+    },
+    {
+      "word": "lemon",
+      "frequency": 298772
+    },
+    {
+      "word": "align",
+      "frequency": 137718
+    },
+    {
+      "word": "major",
+      "frequency": 223489
+    },
+    {
+      "word": "greek",
+      "frequency": 318519
+    },
+    {
+      "word": "heels",
+      "frequency": 153944
+    },
+    {
+      "word": "bulbs",
+      "frequency": 152227
+    },
+    {
+      "word": "spray",
+      "frequency": 266217
+    },
+    {
+      "word": "leave",
+      "frequency": 295326
+    },
+    {
+      "word": "flour",
+      "frequency": 277556
+    },
+    {
+      "word": "flame",
+      "frequency": 161641
+    },
+    {
+      "word": "drill",
+      "frequency": 103754
+    },
+    {
+      "word": "chord",
+      "frequency": 140457
+    },
+    {
+      "word": "alike",
+      "frequency": 239712
+    },
+    {
+      "word": "scary",
+      "frequency": 207090
+    },
+    {
+      "word": "twist",
+      "frequency": 176898
+    },
+    {
+      "word": "flesh",
+      "frequency": 217528
+    },
+    {
+      "word": "hobby",
+      "frequency": 159011
+    },
+    {
+      "word": "ought",
+      "frequency": 209652
+    },
+    {
+      "word": "vinyl",
+      "frequency": 202045
+    },
+    {
+      "word": "cater",
+      "frequency": 85934
+    },
+    {
+      "word": "atoms",
+      "frequency": 106492
+    },
+    {
+      "word": "drain",
+      "frequency": 144579
+    },
+    {
+      "word": "stamp",
+      "frequency": 127767
+    },
+    {
+      "word": "spark",
+      "frequency": 151696
+    },
+    {
+      "word": "alert",
+      "frequency": 125694
+    },
+    {
+      "word": "cargo",
+      "frequency": 173129
+    },
+    {
+      "word": "token",
+      "frequency": 98304
+    },
+    {
+      "word": "trail",
+      "frequency": 72297
+    },
+    {
+      "word": "coral",
+      "frequency": 125045
+    },
+    {
+      "word": "brave",
+      "frequency": 146478
+    },
+    {
+      "word": "linux",
+      "frequency": 155199
+    },
+    {
+      "word": "dryer",
+      "frequency": 131079
+    },
+    {
+      "word": "ebook",
+      "frequency": 108456
+    },
+    {
+      "word": "rinse",
+      "frequency": 108799
+    },
+    {
+      "word": "civic",
+      "frequency": 149999
+    },
+    {
+      "word": "volts",
+      "frequency": 77760
+    },
+    {
+      "word": "worse",
+      "frequency": 86065
+    },
+    {
+      "word": "panic",
+      "frequency": 139940
+    },
+    {
+      "word": "novel",
+      "frequency": 143234
+    },
+    {
+      "word": "tweak",
+      "frequency": 60952
+    },
+    {
+      "word": "naval",
+      "frequency": 141518
+    },
+    {
+      "word": "agile",
+      "frequency": 137407
+    },
+    {
+      "word": "laugh",
+      "frequency": 96065
+    },
+    {
+      "word": "fatty",
+      "frequency": 130843
+    },
+    {
+      "word": "syrup",
+      "frequency": 124452
+    },
+    {
+      "word": "spare",
+      "frequency": 81101
+    },
+    {
+      "word": "sense",
+      "frequency": 65968
+    },
+    {
+      "word": "macro",
+      "frequency": 74082
+    },
+    {
+      "word": "linen",
+      "frequency": 88428
+    },
+    {
+      "word": "yacht",
+      "frequency": 87470
+    },
+    {
+      "word": "cigar",
+      "frequency": 71197
+    },
+    {
+      "word": "fried",
+      "frequency": 112178
+    },
+    {
+      "word": "scars",
+      "frequency": 57872
+    },
+    {
+      "word": "march",
+      "frequency": 90573
+    },
+    {
+      "word": "scalp",
+      "frequency": 102144
+    },
+    {
+      "word": "empty",
+      "frequency": 55205
+    },
+    {
+      "word": "curls",
+      "frequency": 58357
+    },
+    {
+      "word": "crate",
+      "frequency": 66469
+    },
+    {
+      "word": "vivid",
+      "frequency": 99049
+    },
+    {
+      "word": "burst",
+      "frequency": 63745
+    },
+    {
+      "word": "scarf",
+      "frequency": 64189
+    },
+    {
+      "word": "fines",
+      "frequency": 88330
+    },
+    {
+      "word": "trout",
+      "frequency": 83815
+    },
+    {
+      "word": "evoke",
+      "frequency": 34897
+    },
+    {
+      "word": "saver",
+      "frequency": 59637
+    },
+    {
+      "word": "broth",
+      "frequency": 73143
+    },
+    {
+      "word": "flock",
+      "frequency": 53536
+    },
+    {
+      "word": "lunar",
+      "frequency": 73844
+    },
+    {
+      "word": "crush",
+      "frequency": 60939
+    },
+    {
+      "word": "quota",
+      "frequency": 45338
+    },
+    {
+      "word": "relay",
+      "frequency": 34616
+    },
+    {
+      "word": "stint",
+      "frequency": 52998
+    },
+    {
+      "word": "sedan",
+      "frequency": 50923
+    },
+    {
+      "word": "canoe",
+      "frequency": 47875
+    },
+    {
+      "word": "nazis",
+      "frequency": 56639
+    },
+    {
+      "word": "windy",
+      "frequency": 58493
+    },
+    {
+      "word": "mango",
+      "frequency": 47468
+    },
+    {
+      "word": "dusty",
+      "frequency": 59570
+    },
+    {
+      "word": "hurry",
+      "frequency": 57750
+    },
+    {
+      "word": "mourn",
+      "frequency": 23049
+    },
+    {
+      "word": "squat",
+      "frequency": 36552
+    },
+    {
+      "word": "flora",
+      "frequency": 56008
+    },
+    {
+      "word": "toner",
+      "frequency": 48843
+    },
+    {
+      "word": "humid",
+      "frequency": 53655
+    },
+    {
+      "word": "blaze",
+      "frequency": 45888
+    },
+    {
+      "word": "wasps",
+      "frequency": 28395
+    },
+    {
+      "word": "fetus",
+      "frequency": 39693
+    },
+    {
+      "word": "mould",
+      "frequency": 36253
+    },
+    {
+      "word": "might",
+      "frequency": 46924
+    },
+    {
+      "word": "repel",
+      "frequency": 24167
+    },
+    {
+      "word": "bland",
+      "frequency": 43694
+    },
+    {
+      "word": "fumes",
+      "frequency": 37826
+    },
+    {
+      "word": "flush",
+      "frequency": 34415
+    },
+    {
+      "word": "cloud",
+      "frequency": 26822
+    },
+    {
+      "word": "heath",
+      "frequency": 36856
+    },
+    {
+      "word": "undue",
+      "frequency": 38716
+    },
+    {
+      "word": "kudos",
+      "frequency": 38528
+    },
+    {
+      "word": "brute",
+      "frequency": 33360
+    },
+    {
+      "word": "scare",
+      "frequency": 29030
+    },
+    {
+      "word": "labor",
+      "frequency": 20775
+    },
+    {
+      "word": "kappa",
+      "frequency": 34144
+    },
+    {
+      "word": "bison",
+      "frequency": 31473
+    },
+    {
+      "word": "swipe",
+      "frequency": 27212
+    },
+    {
+      "word": "smoky",
+      "frequency": 32378
+    },
+    {
+      "word": "decay",
+      "frequency": 19820
+    },
+    {
+      "word": "tread",
+      "frequency": 27708
+    },
+    {
+      "word": "regal",
+      "frequency": 31214
+    },
+    {
+      "word": "brine",
+      "frequency": 29417
+    },
+    {
+      "word": "vigor",
+      "frequency": 20114
+    },
+    {
+      "word": "noted",
+      "frequency": 30244
+    },
+    {
+      "word": "dogma",
+      "frequency": 24268
+    },
+    {
+      "word": "godly",
+      "frequency": 29601
+    },
+    {
+      "word": "slack",
+      "frequency": 23709
+    },
+    {
+      "word": "grate",
+      "frequency": 17154
+    },
+    {
+      "word": "lipid",
+      "frequency": 28459
+    },
+    {
+      "word": "fluke",
+      "frequency": 22987
+    },
+    {
+      "word": "crawl",
+      "frequency": 25787
+    },
+    {
+      "word": "knead",
+      "frequency": 16206
+    },
+    {
+      "word": "smear",
+      "frequency": 19033
+    },
+    {
+      "word": "perch",
+      "frequency": 19705
+    },
+    {
+      "word": "tacky",
+      "frequency": 24220
+    },
+    {
+      "word": "binge",
+      "frequency": 22470
+    },
+    {
+      "word": "fussy",
+      "frequency": 23081
+    },
+    {
+      "word": "while",
+      "frequency": 22974
+    },
+    {
+      "word": "haste",
+      "frequency": 23904
+    },
+    {
+      "word": "axial",
+      "frequency": 23200
+    },
+    {
+      "word": "tense",
+      "frequency": 14655
+    },
+    {
+      "word": "daily",
+      "frequency": 13716
+    },
+    {
+      "word": "kefir",
+      "frequency": 22667
+    },
+    {
+      "word": "timed",
+      "frequency": 22554
+    },
+    {
+      "word": "wi-fi",
+      "frequency": 22102
+    },
+    {
+      "word": "swath",
+      "frequency": 13954
+    },
+    {
+      "word": "caste",
+      "frequency": 17208
+    },
+    {
+      "word": "rodeo",
+      "frequency": 18633
+    },
+    {
+      "word": "speck",
+      "frequency": 12619
+    },
+    {
+      "word": "braid",
+      "frequency": 9328
+    },
+    {
+      "word": "diced",
+      "frequency": 17136
+    },
+    {
+      "word": "bribe",
+      "frequency": 8784
+    },
+    {
+      "word": "spoon",
+      "frequency": 15084
+    },
+    {
+      "word": "frail",
+      "frequency": 19153
+    },
+    {
+      "word": "tapas",
+      "frequency": 18331
+    },
+    {
+      "word": "pixie",
+      "frequency": 19217
+    },
+    {
+      "word": "franc",
+      "frequency": 10244
+    },
+    {
+      "word": "smack",
+      "frequency": 15143
+    },
+    {
+      "word": "bitch",
+      "frequency": 7584
+    },
+    {
+      "word": "clasp",
+      "frequency": 8995
+    },
+    {
+      "word": "erect",
+      "frequency": 17330
+    },
+    {
+      "word": "polka",
+      "frequency": 16382
+    },
+    {
+      "word": "intel",
+      "frequency": 16011
+    },
+    {
+      "word": "slimy",
+      "frequency": 14904
+    },
+    {
+      "word": "bushy",
+      "frequency": 13444
+    },
+    {
+      "word": "hated",
+      "frequency": 14491
+    },
+    {
+      "word": "nigga",
+      "frequency": 8788
+    },
+    {
+      "word": "edict",
+      "frequency": 9890
+    },
+    {
+      "word": "scion",
+      "frequency": 12285
+    },
+    {
+      "word": "pinky",
+      "frequency": 12539
+    },
+    {
+      "word": "goons",
+      "frequency": 7099
+    },
+    {
+      "word": "raven",
+      "frequency": 12985
+    },
+    {
+      "word": "posse",
+      "frequency": 12768
+    },
+    {
+      "word": "crimp",
+      "frequency": 6153
+    },
+    {
+      "word": "sebum",
+      "frequency": 12512
+    },
+    {
+      "word": "known",
+      "frequency": 11350
+    },
+    {
+      "word": "taunt",
+      "frequency": 6142
+    },
+    {
+      "word": "mired",
+      "frequency": 10681
+    },
+    {
+      "word": "holed",
+      "frequency": 8350
+    },
+    {
+      "word": "sully",
+      "frequency": 8402
+    },
+    {
+      "word": "fedex",
+      "frequency": 10436
+    },
+    {
+      "word": "rogue",
+      "frequency": 10376
+    },
+    {
+      "word": "dings",
+      "frequency": 9952
+    },
+    {
+      "word": "lotto",
+      "frequency": 10171
+    },
+    {
+      "word": "haves",
+      "frequency": 8117
+    },
+    {
+      "word": "filly",
+      "frequency": 6804
+    },
+    {
+      "word": "minty",
+      "frequency": 9154
+    },
+    {
+      "word": "domed",
+      "frequency": 9115
+    },
+    {
+      "word": "sniff",
+      "frequency": 8297
+    },
+    {
+      "word": "laity",
+      "frequency": 8514
+    },
+    {
+      "word": "ahold",
+      "frequency": 8224
+    },
+    {
+      "word": "alibi",
+      "frequency": 7067
+    },
+    {
+      "word": "mores",
+      "frequency": 7917
+    },
+    {
+      "word": "leery",
+      "frequency": 7754
+    },
+    {
+      "word": "olden",
+      "frequency": 7686
+    },
+    {
+      "word": "myrrh",
+      "frequency": 7500
+    },
+    {
+      "word": "ma'am",
+      "frequency": 7304
+    },
+    {
+      "word": "parse",
+      "frequency": 7278
+    },
+    {
+      "word": "hydra",
+      "frequency": 6894
+    },
+    {
+      "word": "manna",
+      "frequency": 6845
+    },
+    {
+      "word": "gruff",
+      "frequency": 6436
+    },
+    {
+      "word": "freed",
+      "frequency": 6265
+    },
+    {
+      "word": "stiff",
+      "frequency": 6244
+    },
+    {
+      "word": "lanky",
+      "frequency": 6075
+    }
+  ]
+}
