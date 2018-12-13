@@ -23,9 +23,11 @@ class WordListGenerator( private val amount: Int) {
             return wordList
         }
 
-        for (i in 0 until amount)
-            wordList.add(availableWords.remove())
-
+        for (i in 0 until amount) {
+            val word = availableWords.random()
+            wordList.add(word)
+            availableWords.remove(word)
+        }
         return wordList
     }
 
@@ -34,7 +36,7 @@ class WordListGenerator( private val amount: Int) {
         var availableWords = load()
 
         fun load() : WordList{
-            val jsonObject = Json.parse(FileReader(Paths.get("data", "used_words.json").toFile())).asObject()
+            val jsonObject = Json.parse(FileReader(Paths.get("data", "words.json").toFile())).asObject()
             val jsonArray = jsonObject.get("words").asArray()
             val words = jsonArray.map { Word.deserialize(it.asObject()) }.map { it.word }.toTypedArray()
 
