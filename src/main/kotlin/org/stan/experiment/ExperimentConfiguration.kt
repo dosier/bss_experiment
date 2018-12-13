@@ -12,6 +12,9 @@ import java.io.FileWriter
 import java.lang.Exception
 import java.nio.file.Paths
 import java.util.*
+import java.util.stream.IntStream
+import java.util.stream.Stream
+import kotlin.collections.ArrayList
 
 /**
  * The [ExperimentConfiguration] class manages the [ExperimentGroup] selection and creates the [Experiment] for the [ExperimentParticipant].
@@ -176,7 +179,12 @@ class ExperimentConfiguration {
         return education
     }
 
+
+
     companion object {
+
+        private const val LISTS_PER_CATEGORY = 13
+        const val INITIAL_WORDS_IN_LIST = 3
 
         const val GROUP_SIZE = 8
         const val GROUP_A = "GroupA.json"
@@ -188,16 +196,17 @@ class ExperimentConfiguration {
         val savePath = Paths.get("data", "participants")!!
 
         val allWordLists = hashMapOf(
-            Pair(WordListCategory.EASY_TO_READ_WORDS, arrayOf(
-                WordListGenerator(3).generate(),
-                WordListGenerator(4).generate()
-            )),
-            Pair(WordListCategory.HARD_TO_READ_WORDS,  arrayOf(
-                WordListGenerator(3).generate(),
-                WordListGenerator(4).generate()
-            ))
+            Pair(WordListCategory.EASY_TO_READ_WORDS, buildLists()),
+            Pair(WordListCategory.HARD_TO_READ_WORDS, buildLists())
         )
 
+        private fun buildLists() : Array<WordList>{
+            val list = ArrayList<WordList>()
 
+            for (i in 0 until LISTS_PER_CATEGORY)
+                list.add(WordListGenerator(INITIAL_WORDS_IN_LIST + i).generate())
+
+            return list.toTypedArray()
+        }
     }
 }

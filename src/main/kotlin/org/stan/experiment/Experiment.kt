@@ -2,20 +2,17 @@ package org.stan.experiment
 
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
-import javafx.application.Platform
 import javafx.beans.binding.Bindings
 import javafx.collections.FXCollections
 import javafx.event.EventHandler
+import javafx.geometry.HPos
 import javafx.geometry.Insets
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.control.*
-import javafx.scene.layout.Background
-import javafx.scene.layout.HBox
-import javafx.scene.layout.StackPane
-import javafx.scene.layout.VBox
+import javafx.scene.layout.*
 import javafx.scene.paint.Color
 import javafx.scene.text.TextAlignment
 import javafx.stage.Modality
@@ -155,23 +152,20 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
 
                         wordLabel.text = ""
 
-                        val textInputDialog = createTextInputDialog()
+                        val currentCategoryAnswers = answers[currentCategory]!!
+                        val currentListAnswers = currentCategoryAnswers[currentListIndex]
+                        val currentCategoryLists =  wordLists[currentCategory]!!
+                        val wordList = currentCategoryLists[currentListIndex]
 
-                        Platform.runLater {
+                        val answerDialog = object : ExperimentAnswerStage(currentListIndex + ExperimentConfiguration.INITIAL_WORDS_IN_LIST) {
 
-                            val currentCategoryAnswers = answers[currentCategory]!!
-                            val currentListAnswers = currentCategoryAnswers[currentListIndex]
-                            val currentCategoryLists =  wordLists[currentCategory]!!
-                            val wordList = currentCategoryLists[currentListIndex]
+                            override fun onSubmit(answers: Array<String>) {
 
-                            val answer = textInputDialog.showAndWait()
+                                this.close()
 
-                            answer.ifPresent { input ->
+                                for (word in answers)
+                                    currentListAnswers.add(word)
 
-                                val split = input.split(",")
-
-                                for (word in split)
-                                    currentListAnswers.add(word.trim())
 
                                 val testResult =
                                     WordListScore(
@@ -188,7 +182,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                                 val completedAllListsInCategory = currentListIndex + 1 == currentCategoryLists.size
 
                                 val popupWindow = createPopUpWindow()
-                                val popupLayout = testResult.createVBox(currentScore)
+                                val popupLayout = testResult.createGrid(currentScore)
                                 val popupButton = if (failedCurrentList || completedAllListsInCategory)
                                     Button("Submit category score")
                                 else
@@ -229,7 +223,8 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                                     wordListCopy.addAll(wordLists[currentCategory]!![currentListIndex])
                                 }
 
-                                popupLayout.children.add(popupButton)
+                                popupLayout.addRow(1, popupButton)
+                                GridPane.setHalignment(popupButton, HPos.CENTER)
 
                                 val popupScene = Scene(popupLayout,
                                     POPUP_WIDTH,
@@ -239,7 +234,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
                                 popupWindow.showAndWait()
                             }
                         }
-
+                        answerDialog.show()
                     }
                 })
         )
@@ -400,6 +395,7 @@ class Experiment(startCategory: WordListCategory, private val participant: Exper
             Bindings.createBooleanBinding(Callable {
                 textInputDialog.editor.text.trim().isEmpty()
             }, textInputDialog.editor.textProperty()))
+
 
         textInputDialog.editor.prefHeight(200.0)
         return textInputDialog

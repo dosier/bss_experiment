@@ -1,6 +1,11 @@
 package org.util
 
+import com.eclipsesource.json.JsonArray
+import com.eclipsesource.json.JsonObject
+import com.eclipsesource.json.PrettyPrint
+import com.eclipsesource.json.WriterConfig
 import org.stan.wordlist.Word
+import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -15,8 +20,8 @@ object WordScanner {
 
     private val lemmas = HashSet<String>()
 
-    private const val MINIMUM_FREQUENCY = 1_000_000
-    private const val MAXIMUM_FREQUENCY = 10_000_000
+    private const val MINIMUM_FREQUENCY = 6_000
+    private const val MAXIMUM_FREQUENCY = 100_000_000
 
     private const val WORD_LENGTH = 5
 
@@ -34,24 +39,32 @@ object WordScanner {
         val end = System.currentTimeMillis()
         val duration = end - start
 
+        val wordsCounts = results.size
+        var wordsNeeded = 0
+        var wordsInList = 3
+        for (i in 1..13){
+            wordsNeeded += wordsInList * 2
+            wordsInList++
+        }
+        println("Required amount of words = $wordsNeeded")
         println("Scanned ${results.size} words in $duration ms.")
 
-//        results.forEach { println(it) }
+        results.forEach { println(it) }
 
-//        val serialized = JsonObject()
-//        val serializedWords = JsonArray()
-//        results.forEach { serializedWords.add(it.serialize()) }
-//        serialized.add("words", serializedWords)
-//
-//        val out = Paths.get("data", "other_used_words.json").toFile()
-//        out.createNewFile()
-//
-//        val fileWriter = FileWriter(out)
-//
-//        serialized.writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
-//
-//        fileWriter.flush()
-//        fileWriter.close()
+        val serialized = JsonObject()
+        val serializedWords = JsonArray()
+        results.forEach { serializedWords.add(it.serialize()) }
+        serialized.add("words", serializedWords)
+
+        val out = Paths.get("data", "other_used_words.json").toFile()
+        out.createNewFile()
+
+        val fileWriter = FileWriter(out)
+
+        serialized.writeTo(fileWriter, WriterConfig.PRETTY_PRINT)
+
+        fileWriter.flush()
+        fileWriter.close()
     }
 
     // this is a list of random words from websites and such
